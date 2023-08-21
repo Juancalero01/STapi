@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
-import { ClientEntity } from './entities/client.entity';
+import { ClientEntity } from './entity/client.entity';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 
