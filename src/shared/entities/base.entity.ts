@@ -4,13 +4,12 @@ import {
   UpdateDateColumn,
   Column,
 } from 'typeorm';
-import { StateEnum } from '../enums/state.enum';
 
 export class BaseEntity {
   @PrimaryGeneratedColumn('increment')
   id: number;
-  @Column({ type: 'enum', enum: StateEnum, default: StateEnum.ACTIVE })
-  state: StateEnum;
+  @Column({ type: 'boolean', default: true })
+  state: boolean;
   @CreateDateColumn()
   createdAt: Date;
   @UpdateDateColumn()
