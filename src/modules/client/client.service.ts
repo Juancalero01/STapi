@@ -14,7 +14,9 @@ export class ClientService {
 
   async findAll(): Promise<ClientEntity[]> {
     try {
-      return await this.clientRepository.find();
+      return await this.clientRepository.find({
+        relations: ['taxCondition', 'province'],
+      });
     } catch (error) {
       throw error;
     }
@@ -22,15 +24,18 @@ export class ClientService {
 
   async findOne(id: number): Promise<ClientEntity> {
     try {
-      return await this.clientRepository.findOne({ where: { id } });
+      return await this.clientRepository.findOne({
+        where: { id },
+        relations: ['taxCondition', 'province'],
+      });
     } catch (error) {
       throw error;
     }
   }
 
-  async findOneByName(name: string): Promise<ClientEntity> {
+  async findOneByName(taxpayerName: string): Promise<ClientEntity> {
     try {
-      return await this.clientRepository.findOne({ where: { name } });
+      return await this.clientRepository.findOne({ where: { taxpayerName } });
     } catch (error) {
       throw error;
     }
@@ -38,7 +43,7 @@ export class ClientService {
 
   async create(createClientDto: CreateClientDto): Promise<ClientEntity | void> {
     try {
-      const client = await this.findOneByName(createClientDto.name);
+      const client = await this.findOneByName(createClientDto.taxpayerName);
       if (!client) await this.clientRepository.save(createClientDto);
       return client;
     } catch (error) {
