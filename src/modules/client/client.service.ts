@@ -58,4 +58,12 @@ export class ClientService {
       throw error;
     }
   }
+
+  async importClients(clients: CreateClientDto[]): Promise<void> {
+    try {
+      await this.clientRepository.save(clients);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

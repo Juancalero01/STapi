@@ -61,4 +61,16 @@ export class ClientController {
       throw error;
     }
   }
+
+  @Post('/import')
+  async importClients(
+    @Body()
+    clients: CreateClientDto[],
+  ): Promise<void> {
+    try {
+      await this.clientService.importClients(clients);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

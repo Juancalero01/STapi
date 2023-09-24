@@ -12,7 +12,7 @@ export class BaseEntity {
   @Column({ type: 'enum', enum: StateEnum, default: StateEnum.ACTIVE })
   state: StateEnum;
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 }

@@ -12,6 +12,11 @@ export class CreateClientDto {
   @Length(1, 60, { message: 'Name must be between 1 and 60 characters' })
   name: string;
 
+  @IsOptional({ message: 'Cuit is optional' })
+  @IsString({ message: 'Cuit must be a string' })
+  @Length(11, 13, { message: 'Cuit must be between 11 and 13 characters' })
+  cuit?: string;
+
   @IsOptional({ message: 'Contact is optional' })
   @IsString({ message: 'Contact must be a string' })
   @Length(3, 120, { message: 'Contact must be between 3 and 120 characters' })
