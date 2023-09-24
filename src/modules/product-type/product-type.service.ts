@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductTypeEntity } from './entity/product-type.entity';
 import { Repository } from 'typeorm';
-import { CreateClientDto } from '../client/dto/create-client.dto';
 import { CreateProductTypeDto } from './dto/create-type-product.dto';
 import { UpdateProductTypeDto } from './dto/update-type-product.dto';
 
@@ -44,7 +43,7 @@ export class ProductTypeService {
 
   async create(
     createProductTypeDto: CreateProductTypeDto,
-  ): Promise<CreateClientDto | void> {
+  ): Promise<CreateProductTypeDto> {
     try {
       const productTypeFound = await this.findOneByPrefixOrName(
         createProductTypeDto.prefix,
@@ -61,7 +60,7 @@ export class ProductTypeService {
   async update(
     id: number,
     updateProductTypeDto: UpdateProductTypeDto,
-  ): Promise<UpdateProductTypeDto | void> {
+  ): Promise<UpdateProductTypeDto> {
     try {
       const productTypeFound = await this.findOne(id);
       if (productTypeFound)
