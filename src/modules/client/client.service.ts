@@ -33,7 +33,7 @@ export class ClientService {
     }
   }
 
-  async findOneByName(taxpayerName: string): Promise<ClientEntity> {
+  async findOneByTaxpayerName(taxpayerName: string): Promise<ClientEntity> {
     try {
       return await this.clientRepository.findOne({ where: { taxpayerName } });
     } catch (error) {
@@ -43,7 +43,9 @@ export class ClientService {
 
   async create(createClientDto: CreateClientDto): Promise<ClientEntity | void> {
     try {
-      const client = await this.findOneByName(createClientDto.taxpayerName);
+      const client = await this.findOneByTaxpayerName(
+        createClientDto.taxpayerName,
+      );
       if (!client) await this.clientRepository.save(createClientDto);
       return client;
     } catch (error) {

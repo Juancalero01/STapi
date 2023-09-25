@@ -44,7 +44,6 @@ export class ClientController {
       if (await this.clientService.create(createClientDto))
         throw new HttpException('Client already exists', 409);
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }

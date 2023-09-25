@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   Length,
+  MaxLength,
 } from 'class-validator';
 import { ProvinceEntity } from 'src/shared/modules/province/province.entity';
 import { TaxConditionEntity } from 'src/shared/modules/tax-condition/tax-condition.entity';
@@ -33,7 +34,9 @@ export class CreateClientDto {
 
   @IsOptional({ message: 'Taxpayer Email is optional' })
   @IsEmail({ require_tld: true }, { message: 'Email is not valid' })
-  @Length(120)
+  @MaxLength(120, {
+    message: 'Taxpayer Email must be less than 120 characters',
+  })
   taxpayerEmail?: string;
 
   @IsOptional({ message: 'Taxpayer Phone is optional' })
@@ -84,7 +87,7 @@ export class CreateClientDto {
 
   @IsOptional({ message: 'Contact Email is optional' })
   @IsEmail({ require_tld: true }, { message: 'Email is not valid' })
-  @Length(120)
+  @MaxLength(120, { message: 'Contact Email must be less than 120 characters' })
   contactEmail?: string;
 
   @IsOptional({ message: 'Contact Phone is optional' })

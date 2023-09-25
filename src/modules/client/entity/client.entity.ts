@@ -12,7 +12,6 @@ export class ClientEntity extends BaseEntity {
   @Column({
     type: 'varchar',
     length: 13,
-    unique: true,
     nullable: true,
     default: null,
   })
@@ -27,7 +26,6 @@ export class ClientEntity extends BaseEntity {
   @Column({
     type: 'varchar',
     length: 120,
-    unique: true,
     nullable: true,
     default: null,
   })
@@ -36,7 +34,6 @@ export class ClientEntity extends BaseEntity {
   @Column({
     type: 'char',
     length: 20,
-    unique: true,
     nullable: true,
     default: null,
   })
@@ -69,7 +66,6 @@ export class ClientEntity extends BaseEntity {
   @Column({
     type: 'varchar',
     length: 120,
-    unique: true,
     nullable: true,
     default: null,
   })
@@ -78,7 +74,6 @@ export class ClientEntity extends BaseEntity {
   @Column({
     type: 'char',
     length: 20,
-    unique: true,
     nullable: true,
     default: null,
   })
