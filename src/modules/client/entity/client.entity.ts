@@ -1,7 +1,7 @@
 import { ProductEntity } from 'src/modules/product/entity/product.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
-import { ProvinceEntity } from 'src/shared/modules/province/province.entity';
-import { TaxConditionEntity } from 'src/shared/modules/tax-condition/tax-condition.entity';
+import { ProvinceEntity } from 'src/modules/province/province.entity';
+import { TaxConditionEntity } from 'src/modules/tax-condition/tax-condition.entity';
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 
 @Entity('clients')
