@@ -1,7 +1,8 @@
 import { ClientEntity } from 'src/modules/client/entity/client.entity';
 import { ProductTypeEntity } from 'src/modules/product-type/entity/product-type.entity';
+import { ServiceEntity } from 'src/modules/service/service.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity('products')
 export class ProductEntity extends BaseEntity {
@@ -19,4 +20,7 @@ export class ProductEntity extends BaseEntity {
 
   @ManyToOne(() => ClientEntity, (client) => client.products)
   client: ClientEntity;
+
+  @OneToMany(() => ServiceEntity, (service) => service.product)
+  service: ServiceEntity[];
 }
