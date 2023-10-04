@@ -1,4 +1,4 @@
-import { ProductEntity } from 'src/modules/product/entity/product.entity';
+import { ProductEntity } from 'src/modules/product/product.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { ProvinceEntity } from 'src/modules/province/province.entity';
 import { TaxConditionEntity } from 'src/modules/tax-condition/tax-condition.entity';

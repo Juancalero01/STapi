@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ClientEntity } from './entity/client.entity';
-import { CreateClientDto } from './dto/create-client.dto';
+import { ClientEntity } from './client.entity';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { CreateClientDto } from './dto/create-client.dto';
 
 @Injectable()
 export class ClientService {
@@ -41,12 +41,10 @@ export class ClientService {
     }
   }
 
-  async create(createClientDto: CreateClientDto): Promise<ClientEntity | void> {
+  async create(body: CreateClientDto): Promise<ClientEntity | void> {
     try {
-      const client = await this.findOneByTaxpayerName(
-        createClientDto.taxpayerName,
-      );
-      if (!client) await this.clientRepository.save(createClientDto);
+      const client = await this.findOneByTaxpayerName(body.taxpayerName);
+      if (!client) await this.clientRepository.save(body);
       return client;
     } catch (error) {
       throw error;
@@ -55,11 +53,11 @@ export class ClientService {
 
   async update(
     id: number,
-    updateClientDto: UpdateClientDto,
+    body: UpdateClientDto,
   ): Promise<ClientEntity | void> {
     try {
       const client = await this.findOne(id);
-      if (client) await this.clientRepository.update(id, updateClientDto);
+      if (client) await this.clientRepository.update(id, body);
       return client;
     } catch (error) {
       throw error;

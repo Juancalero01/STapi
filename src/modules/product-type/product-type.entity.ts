@@ -1,4 +1,4 @@
-import { ProductEntity } from 'src/modules/product/entity/product.entity';
+import { ProductEntity } from 'src/modules/product/product.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 

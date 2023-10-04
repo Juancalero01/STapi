@@ -1,5 +1,5 @@
-import { ClientEntity } from 'src/modules/client/entity/client.entity';
-import { ProductTypeEntity } from 'src/modules/product-type/entity/product-type.entity';
+import { ClientEntity } from 'src/modules/client/client.entity';
+import { ProductTypeEntity } from 'src/modules/product-type/product-type.entity';
 import { ServiceEntity } from 'src/modules/service/service.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';

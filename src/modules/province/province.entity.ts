@@ -1,4 +1,4 @@
-import { ClientEntity } from 'src/modules/client/entity/client.entity';
+import { ClientEntity } from 'src/modules/client/client.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 
