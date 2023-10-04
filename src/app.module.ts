@@ -7,6 +7,7 @@ import { ProvinceModule } from './modules/province/province.module';
 import { TaxConditionModule } from './modules/tax-condition/tax-condition.module';
 import { ServiceStateModule } from './modules/service-state/service-state.module';
 import { ServiceModule } from './modules/service/service.module';
+import { ServicePriorityModule } from './modules/service-priority/service-priority.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ServiceModule } from './modules/service/service.module';
     ProvinceModule,
     TaxConditionModule,
     ServiceStateModule,
+    ServicePriorityModule,
   ],
 })
 export class AppModule {}
