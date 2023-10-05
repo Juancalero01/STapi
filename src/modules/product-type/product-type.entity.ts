@@ -4,14 +4,11 @@ import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('product_types')
 export class ProductTypeEntity extends BaseEntity {
-  @Column({ type: 'varchar', length: 60, unique: true, nullable: false })
+  @Column({ type: 'varchar', length: 60, nullable: false })
   name: string;
 
-  @Column({ type: 'varchar', length: 4, unique: true, nullable: true })
+  @Column({ type: 'varchar', length: 4, nullable: true })
   prefix: string;
-
-  @Column({ type: 'varchar', length: 120, nullable: true })
-  description: string;
 
   @OneToMany(() => ProductEntity, (product) => product.productType)
   products: ProductEntity[];
