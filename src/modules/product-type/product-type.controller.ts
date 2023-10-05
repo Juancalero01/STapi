@@ -20,8 +20,6 @@ export class ProductTypeController {
   async findAll(): Promise<ProductTypeEntity[]> {
     try {
       const productTypes = await this.productTypeService.findAll();
-      if (!productTypes.length)
-        throw new HttpException('Product Types not found', 404);
       return productTypes;
     } catch (error) {
       throw error;
