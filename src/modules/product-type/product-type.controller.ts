@@ -45,7 +45,6 @@ export class ProductTypeController {
       if (await this.productTypeService.create(createProductTypeDto))
         throw new HttpException('Product Type already exists', 409);
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }
@@ -59,7 +58,6 @@ export class ProductTypeController {
       if (!(await this.productTypeService.update(id, updateProductTypeDto)))
         throw new HttpException(`Product Type not found`, 404);
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }

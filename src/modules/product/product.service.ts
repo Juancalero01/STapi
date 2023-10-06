@@ -41,8 +41,7 @@ export class ProductService {
   async create(createProductDto: CreateProductDto): Promise<ProductEntity> {
     try {
       const productFound = await this.findOneSerial(createProductDto.serial);
-      if (!productFound)
-        return await this.productRepository.save(createProductDto);
+      if (!productFound) await this.productRepository.save(createProductDto);
       return productFound;
     } catch (error) {
       throw error;
@@ -55,8 +54,7 @@ export class ProductService {
   ): Promise<ProductEntity> {
     try {
       const productFound = await this.findOne(id);
-      if (productFound)
-        return await this.productRepository.save(updateProductDto);
+      if (productFound) await this.productRepository.save(updateProductDto);
       return productFound;
     } catch (error) {
       throw error;

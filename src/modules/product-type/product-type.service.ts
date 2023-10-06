@@ -71,7 +71,6 @@ export class ProductTypeService {
     }
   }
 
-  // imports
   async importProductTypes(
     productTypes: CreateProductTypeDto[],
   ): Promise<void> {
