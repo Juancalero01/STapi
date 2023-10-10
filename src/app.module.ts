@@ -8,6 +8,7 @@ import { TaxConditionModule } from './modules/tax-condition/tax-condition.module
 import { ServiceStateModule } from './modules/service-state/service-state.module';
 import { ServiceModule } from './modules/service/service.module';
 import { ServicePriorityModule } from './modules/service-priority/service-priority.module';
+import { FailureTypeModule } from './modules/failure-type/failure-type.module';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { ServicePriorityModule } from './modules/service-priority/service-priori
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'root',
+      password: 'CNET2023',
       database: 'cnet',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
@@ -30,6 +31,7 @@ import { ServicePriorityModule } from './modules/service-priority/service-priori
     TaxConditionModule,
     ServiceStateModule,
     ServicePriorityModule,
+    FailureTypeModule,
   ],
 })
 export class AppModule {}
