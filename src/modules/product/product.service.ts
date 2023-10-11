@@ -32,7 +32,10 @@ export class ProductService {
 
   async findOneSerial(serial: string): Promise<ProductEntity> {
     try {
-      return await this.productRepository.findOne({ where: { serial } });
+      return await this.productRepository.findOne({
+        where: { serial },
+        relations: ['client', 'productType'],
+      });
     } catch (error) {
       throw error;
     }

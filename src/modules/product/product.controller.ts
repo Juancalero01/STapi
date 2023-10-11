@@ -35,6 +35,17 @@ export class ProductController {
     }
   }
 
+  @Get('/serial/:serial')
+  async findOneSerial(@Param('serial') serial: string) {
+    try {
+      const product = await this.productService.findOneSerial(serial);
+      if (!product) throw new HttpException(`Product not found`, 404);
+      return product;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Post('/')
   async create(@Body() createProductDto: CreateProductDto): Promise<void> {
     try {
