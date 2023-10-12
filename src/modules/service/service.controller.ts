@@ -62,4 +62,17 @@ export class ServiceController {
       throw error;
     }
   }
+
+  // TODO: Refactorizar este endpoint para que devuelva el ultimo numero de reclamo
+  @Get('/last-reclaim-number')
+  async lastReclaimNumber(): Promise<string> {
+    try {
+      const lastReclaimNumber = await this.serviceService.lastReclaimNumber();
+      if (!lastReclaimNumber)
+        throw new HttpException('Last reclaim number not found', 404);
+      return lastReclaimNumber;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

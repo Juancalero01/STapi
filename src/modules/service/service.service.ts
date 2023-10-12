@@ -46,4 +46,15 @@ export class ServiceService {
       throw error;
     }
   }
+
+  async lastReclaimNumber(): Promise<string> {
+    try {
+      const service = await this.serviceRepository.findOne({
+        order: { reclaim: 'DESC' },
+      });
+      return service.reclaim;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
