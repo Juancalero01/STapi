@@ -63,7 +63,6 @@ export class ServiceController {
     }
   }
 
-  // TODO: Refactorizar este endpoint para que devuelva el ultimo numero de reclamo
   @Get('/last-reclaim-number')
   async lastReclaimNumber(): Promise<string> {
     try {
