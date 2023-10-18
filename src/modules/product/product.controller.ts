@@ -2,8 +2,8 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -25,32 +25,27 @@ export class ProductController {
   }
 
   @Get('/:id')
-  async findOne(id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     try {
-      const product = await this.productService.findOne(id);
-      if (!product) throw new HttpException(`Product not found`, 404);
-      return product;
+      return await this.productService.findOne(id);
     } catch (error) {
       throw error;
     }
   }
 
-  @Get('/serial/:serial')
+  @Get('s/:serial')
   async findOneSerial(@Param('serial') serial: string) {
     try {
-      const product = await this.productService.findOneSerial(serial);
-      if (!product) throw new HttpException(`Product not found`, 404);
-      return product;
+      return await this.productService.findOneSerial(serial);
     } catch (error) {
       throw error;
     }
   }
 
   @Post('/')
-  async create(@Body() createProductDto: CreateProductDto): Promise<void> {
+  async create(@Body() body: CreateProductDto): Promise<void> {
     try {
-      if (await this.productService.create(createProductDto))
-        throw new HttpException('Product already exists', 409);
+      await this.productService.create(body);
     } catch (error) {
       throw error;
     }
@@ -58,24 +53,11 @@ export class ProductController {
 
   @Put('/:id')
   async update(
-    @Param('id') id: number,
-    @Body() updateProductDto: UpdateProductDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateProductDto,
   ): Promise<void> {
     try {
-      if (!(await this.productService.update(id, updateProductDto)))
-        throw new HttpException('Product not found', 404);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Post('/import')
-  async importClients(
-    @Body()
-    products: CreateProductDto[],
-  ): Promise<void> {
-    try {
-      await this.productService.importProducts(products);
+      await this.productService.update(id, body);
     } catch (error) {
       throw error;
     }
