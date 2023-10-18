@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Column,
-  DeleteDateColumn,
 } from 'typeorm';
 
 export class BaseEntity {
@@ -18,7 +17,4 @@ export class BaseEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
 }
