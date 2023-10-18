@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Column,
+  DeleteDateColumn,
 } from 'typeorm';
 
 export class BaseEntity {
@@ -10,11 +11,14 @@ export class BaseEntity {
   id: number;
 
   @Column({ type: 'boolean', default: true })
-  isDeleted: boolean;
+  isActive: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }
