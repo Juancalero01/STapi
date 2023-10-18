@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductTypeEntity } from './product-type.entity';
 import { Repository } from 'typeorm';
@@ -14,7 +14,12 @@ export class ProductTypeService {
 
   async findAll(): Promise<ProductTypeEntity[]> {
     try {
-      return await this.productTypeRepository.find();
+      return (
+        (await this.productTypeRepository.find({
+          select: ['id', 'name', 'prefix'],
+          order: { name: 'ASC' },
+        })) || []
+      );
     } catch (error) {
       throw error;
     }
@@ -22,39 +27,57 @@ export class ProductTypeService {
 
   async findOne(id: number): Promise<ProductTypeEntity> {
     try {
-      return await this.productTypeRepository.findOne({ where: { id } });
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async findOneByPrefixOrName(
-    prefix: string,
-    name: string,
-  ): Promise<ProductTypeEntity> {
-    try {
-      return await this.productTypeRepository.findOne({
-        where: [{ prefix }, { name }],
-      });
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async create(
-    createProductTypeDto: CreateProductTypeDto,
-  ): Promise<CreateProductTypeDto> {
-    try {
-      const productTypeFound = await this.findOneByPrefixOrName(
-        createProductTypeDto.prefix,
-        createProductTypeDto.name,
+      return (
+        (await this.productTypeRepository.findOne({ where: { id } })) || null
       );
-      if (!productTypeFound)
-        await this.productTypeRepository.save(createProductTypeDto);
-      return productTypeFound;
     } catch (error) {
       throw error;
     }
+  }
+
+  async findOnePrefix(prefix: string | null): Promise<ProductTypeEntity> {
+    try {
+      return await this.productTypeRepository
+        .createQueryBuilder('productType')
+        .where(`productType.prefix = ${prefix}`)
+        .getOne();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async create(body: CreateProductTypeDto): Promise<void> {
+    try {
+      const productTypeFound = await this.findOnePrefix(body.prefix);
+      if (
+        productTypeFound ||
+        (body.prefix === null && productTypeFound !== null)
+      ) {
+        throw new HttpException(
+          `Product type with prefix: ${body.prefix} already exists`,
+          409,
+        );
+      }
+      await this.productTypeRepository.save(body);
+    } catch (error) {
+      throw error;
+    }
+
+    // try {
+    //   const productTypeFound = await this.findOnePrefix(body.prefix);
+    //   if (body.prefix === null && !productTypeFound) {
+    //     await this.productTypeRepository.save(body);
+    //   } else if (productTypeFound) {
+    //     throw new HttpException(
+    //       `Product type with prefix: ${body.prefix} already exists`,
+    //       409,
+    //     );
+    //   } else {
+    //     throw new HttpException(`Product type prefix cannot be null`, 409);
+    //   }
+    // } catch (error) {
+    //   throw error;
+    // }
   }
 
   async update(
@@ -81,3 +104,5 @@ export class ProductTypeService {
     }
   }
 }
+
+//refactorizar todo el servicio y el controlador de product-type

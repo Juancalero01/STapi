@@ -42,8 +42,7 @@ export class ProductTypeController {
     @Body() createProductTypeDto: CreateProductTypeDto,
   ): Promise<void> {
     try {
-      if (await this.productTypeService.create(createProductTypeDto))
-        throw new HttpException('Product Type already exists', 409);
+      await this.productTypeService.create(createProductTypeDto);
     } catch (error) {
       throw error;
     }
@@ -74,3 +73,5 @@ export class ProductTypeController {
     }
   }
 }
+
+//refactorizar todo el servicio y el controlador de product-type

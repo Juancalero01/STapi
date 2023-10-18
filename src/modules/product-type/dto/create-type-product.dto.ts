@@ -1,4 +1,4 @@
 export class CreateProductTypeDto {
   name: string;
-  prefix: string;
+  prefix: string | null;
 }
