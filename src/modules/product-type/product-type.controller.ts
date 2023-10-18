@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -19,8 +20,7 @@ export class ProductTypeController {
   @Get('/')
   async findAll(): Promise<ProductTypeEntity[]> {
     try {
-      const productTypes = await this.productTypeService.findAll();
-      return productTypes;
+      return await this.productTypeService.findAll();
     } catch (error) {
       throw error;
     }
@@ -29,20 +29,16 @@ export class ProductTypeController {
   @Get('/:id')
   async findOne(@Param('id') id: number): Promise<ProductTypeEntity> {
     try {
-      const productType = await this.productTypeService.findOne(id);
-      if (!productType) throw new HttpException(`Product Type not found`, 404);
-      return productType;
+      return await this.productTypeService.findOne(id);
     } catch (error) {
       throw error;
     }
   }
 
   @Post('/')
-  async create(
-    @Body() createProductTypeDto: CreateProductTypeDto,
-  ): Promise<void> {
+  async create(@Body() body: CreateProductTypeDto): Promise<void> {
     try {
-      await this.productTypeService.create(createProductTypeDto);
+      await this.productTypeService.create(body);
     } catch (error) {
       throw error;
     }
@@ -50,28 +46,13 @@ export class ProductTypeController {
 
   @Put('/:id')
   async update(
-    @Param('id') id: number,
-    @Body() updateProductTypeDto: UpdateProductTypeDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateProductTypeDto,
   ): Promise<void> {
     try {
-      if (!(await this.productTypeService.update(id, updateProductTypeDto)))
-        throw new HttpException(`Product Type not found`, 404);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Post('/import')
-  async importProductTypes(
-    @Body()
-    productTypes: CreateProductTypeDto[],
-  ): Promise<void> {
-    try {
-      await this.productTypeService.importProductTypes(productTypes);
+      await this.productTypeService.update(id, body);
     } catch (error) {
       throw error;
     }
   }
 }
-
-//refactorizar todo el servicio y el controlador de product-type

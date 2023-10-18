@@ -17,7 +17,7 @@ export class ProductTypeService {
       return (
         (await this.productTypeRepository.find({
           select: ['id', 'name', 'prefix'],
-          order: { name: 'ASC' },
+          order: { prefix: 'ASC' },
         })) || []
       );
     } catch (error) {
@@ -27,9 +27,10 @@ export class ProductTypeService {
 
   async findOne(id: number): Promise<ProductTypeEntity> {
     try {
-      return (
-        (await this.productTypeRepository.findOne({ where: { id } })) || null
-      );
+      return await this.productTypeRepository.findOne({
+        select: ['id', 'name', 'prefix'],
+        where: { id },
+      });
     } catch (error) {
       throw error;
     }
@@ -37,10 +38,9 @@ export class ProductTypeService {
 
   async findOnePrefix(prefix: string | null): Promise<ProductTypeEntity> {
     try {
-      return await this.productTypeRepository
-        .createQueryBuilder('productType')
-        .where(`productType.prefix = ${prefix}`)
-        .getOne();
+      return await this.productTypeRepository.findOne({
+        where: prefix === null ? { prefix: null } : { prefix },
+      });
     } catch (error) {
       throw error;
     }
@@ -48,11 +48,7 @@ export class ProductTypeService {
 
   async create(body: CreateProductTypeDto): Promise<void> {
     try {
-      const productTypeFound = await this.findOnePrefix(body.prefix);
-      if (
-        productTypeFound ||
-        (body.prefix === null && productTypeFound !== null)
-      ) {
+      if (await this.findOnePrefix(body.prefix)) {
         throw new HttpException(
           `Product type with prefix: ${body.prefix} already exists`,
           409,
@@ -62,47 +58,21 @@ export class ProductTypeService {
     } catch (error) {
       throw error;
     }
-
-    // try {
-    //   const productTypeFound = await this.findOnePrefix(body.prefix);
-    //   if (body.prefix === null && !productTypeFound) {
-    //     await this.productTypeRepository.save(body);
-    //   } else if (productTypeFound) {
-    //     throw new HttpException(
-    //       `Product type with prefix: ${body.prefix} already exists`,
-    //       409,
-    //     );
-    //   } else {
-    //     throw new HttpException(`Product type prefix cannot be null`, 409);
-    //   }
-    // } catch (error) {
-    //   throw error;
-    // }
   }
 
-  async update(
-    id: number,
-    updateProductTypeDto: UpdateProductTypeDto,
-  ): Promise<UpdateProductTypeDto> {
+  async update(id: number, body: UpdateProductTypeDto): Promise<void> {
     try {
-      const productTypeFound = await this.findOne(id);
-      if (productTypeFound)
-        await this.productTypeRepository.update(id, updateProductTypeDto);
-      return productTypeFound;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async importProductTypes(
-    productTypes: CreateProductTypeDto[],
-  ): Promise<void> {
-    try {
-      await this.productTypeRepository.save(productTypes);
+      if (!(await this.findOne(id)))
+        throw new HttpException(`Product type with id: ${id} not found`, 404);
+      const productTypeFound = await this.findOnePrefix(body.prefix);
+      if (productTypeFound && productTypeFound.id !== id)
+        throw new HttpException(
+          `Product type with prefix: ${body.prefix} already exists`,
+          409,
+        );
+      await this.productTypeRepository.update(id, body);
     } catch (error) {
       throw error;
     }
   }
 }
-
-//refactorizar todo el servicio y el controlador de product-type
