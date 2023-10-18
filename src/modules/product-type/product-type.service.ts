@@ -16,8 +16,8 @@ export class ProductTypeService {
     try {
       return (
         (await this.productTypeRepository.find({
-          select: ['id', 'name', 'prefix'],
-          order: { prefix: 'ASC' },
+          select: ['id', 'name', 'prefix', 'isActive'],
+          order: { isActive: 'DESC', prefix: 'ASC' },
         })) || []
       );
     } catch (error) {
@@ -28,7 +28,7 @@ export class ProductTypeService {
   async findOne(id: number): Promise<ProductTypeEntity> {
     try {
       return await this.productTypeRepository.findOne({
-        select: ['id', 'name', 'prefix'],
+        select: ['id', 'name', 'prefix', 'isActive'],
         where: { id },
       });
     } catch (error) {
