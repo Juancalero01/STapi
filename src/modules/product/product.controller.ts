@@ -10,13 +10,14 @@ import {
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductEntity } from './product.entity';
 
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get('/')
-  async findAll() {
+  async findAll(): Promise<ProductEntity[]> {
     try {
       return await this.productService.findAll();
     } catch (error) {
@@ -25,7 +26,7 @@ export class ProductController {
   }
 
   @Get('/:id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<ProductEntity> {
     try {
       return await this.productService.findOne(id);
     } catch (error) {
@@ -34,7 +35,7 @@ export class ProductController {
   }
 
   @Get('s/:serial')
-  async findOneSerial(@Param('serial') serial: string) {
+  async findOneSerial(@Param('serial') serial: string): Promise<ProductEntity> {
     try {
       return await this.productService.findOneSerial(serial);
     } catch (error) {
