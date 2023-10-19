@@ -2,8 +2,8 @@ import {
   Body,
   Controller,
   Get,
-  HttpException,
   Param,
+  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -19,30 +19,25 @@ export class ClientController {
   @Get('/')
   async findAll(): Promise<ClientEntity[]> {
     try {
-      const clients = await this.clientService.findAll();
-      if (!clients.length) throw new HttpException('Clients not found', 404);
-      return clients;
+      return await this.clientService.findAll();
     } catch (error) {
       throw error;
     }
   }
 
   @Get('/:id')
-  async findOne(@Param('id') id: number): Promise<ClientEntity> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<ClientEntity> {
     try {
-      const client = await this.clientService.findOne(id);
-      if (!client) throw new HttpException(`Client not found`, 404);
-      return client;
+      return await this.clientService.findOne(id);
     } catch (error) {
       throw error;
     }
   }
 
   @Post('/')
-  async create(@Body() createClientDto: CreateClientDto): Promise<void> {
+  async create(@Body() body: CreateClientDto): Promise<void> {
     try {
-      if (await this.clientService.create(createClientDto))
-        throw new HttpException('Client already exists', 409);
+      await this.clientService.create(body);
     } catch (error) {
       throw error;
     }
@@ -50,24 +45,11 @@ export class ClientController {
 
   @Put('/:id')
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateClientDto: UpdateClientDto,
   ): Promise<void> {
     try {
-      if (!(await this.clientService.update(id, updateClientDto)))
-        throw new HttpException(`Client not found`, 404);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Post('/import')
-  async importClients(
-    @Body()
-    clients: CreateClientDto[],
-  ): Promise<void> {
-    try {
-      await this.clientService.importClients(clients);
+      await this.clientService.update(id, updateClientDto);
     } catch (error) {
       throw error;
     }

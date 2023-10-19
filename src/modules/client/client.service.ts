@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ClientEntity } from './client.entity';
@@ -12,11 +12,38 @@ export class ClientService {
     private readonly clientRepository: Repository<ClientEntity>,
   ) {}
 
+  private readonly querySelect: string[] = [
+    'client.id',
+    'client.taxpayerName',
+    'client.taxpayerId',
+    'client.taxpayerEmail',
+    'client.taxpayerPhone',
+    'client.street',
+    'client.number',
+    'client.floor',
+    'client.office',
+    'client.postalCode',
+    'client.contactName',
+    'client.contactEmail',
+    'client.contactPhone',
+    'client.comment',
+    'client.isActive',
+    'taxCondition.id',
+    'taxCondition.name',
+    'province.id',
+    'province.name',
+  ];
+
   async findAll(): Promise<ClientEntity[]> {
     try {
-      return await this.clientRepository.find({
-        relations: ['taxCondition', 'province'],
-      });
+      const clients = await this.clientRepository
+        .createQueryBuilder('client')
+        .select(this.querySelect)
+        .innerJoin('client.taxCondition', 'taxCondition')
+        .innerJoin('client.province', 'province')
+        .orderBy('client.taxpayerName', 'ASC')
+        .getMany();
+      return clients || [];
     } catch (error) {
       throw error;
     }
@@ -24,16 +51,20 @@ export class ClientService {
 
   async findOne(id: number): Promise<ClientEntity> {
     try {
-      return await this.clientRepository.findOne({
-        where: { id },
-        relations: ['taxCondition', 'province'],
-      });
+      const client = await this.clientRepository
+        .createQueryBuilder('client')
+        .select(this.querySelect)
+        .innerJoin('client.taxCondition', 'taxCondition')
+        .innerJoin('client.province', 'province')
+        .where(`client.id = ${id}`)
+        .getOne();
+      return client || null;
     } catch (error) {
       throw error;
     }
   }
 
-  async findOneByTaxpayerName(taxpayerName: string): Promise<ClientEntity> {
+  async findOneTaxpayerName(taxpayerName: string): Promise<ClientEntity> {
     try {
       return await this.clientRepository.findOne({ where: { taxpayerName } });
     } catch (error) {
@@ -41,32 +72,30 @@ export class ClientService {
     }
   }
 
-  async create(body: CreateClientDto): Promise<ClientEntity | void> {
+  async create(body: CreateClientDto): Promise<void> {
     try {
-      const client = await this.findOneByTaxpayerName(body.taxpayerName);
-      if (!client) await this.clientRepository.save(body);
-      return client;
+      if (await this.findOneTaxpayerName(body.taxpayerName))
+        throw new HttpException(
+          `Client with taxpayerName: ${body.taxpayerName} already exists`,
+          409,
+        );
+      await this.clientRepository.save(body);
     } catch (error) {
       throw error;
     }
   }
 
-  async update(
-    id: number,
-    body: UpdateClientDto,
-  ): Promise<ClientEntity | void> {
+  async update(id: number, body: UpdateClientDto): Promise<void> {
     try {
-      const client = await this.findOne(id);
-      if (client) await this.clientRepository.update(id, body);
-      return client;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async importClients(clients: CreateClientDto[]): Promise<void> {
-    try {
-      await this.clientRepository.save(clients);
+      if (!(await this.findOne(id)))
+        throw new HttpException(`Client with id: ${id} not found`, 404);
+      const clientFound = await this.findOneTaxpayerName(body.taxpayerName);
+      if (clientFound && clientFound.id !== id)
+        throw new HttpException(
+          `Client with taxpayerName: ${body.taxpayerName} already exists`,
+          409,
+        );
+      await this.clientRepository.update(id, body);
     } catch (error) {
       throw error;
     }
