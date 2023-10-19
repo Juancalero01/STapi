@@ -1,6 +1,16 @@
-import { Controller, Get, HttpException, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ProvinceService } from './province.service';
 import { ProvinceEntity } from './province.entity';
+import { CreateProvinceDto } from './dto/create-province.dto';
 
 @Controller('province')
 export class ProvinceController {
@@ -9,21 +19,39 @@ export class ProvinceController {
   @Get('/')
   async findAll(): Promise<ProvinceEntity[]> {
     try {
-      const provinces = await this.provinceService.findAll();
-      if (!provinces.length)
-        throw new HttpException('Provinces not found', 404);
-      return provinces;
+      return await this.provinceService.findAll();
     } catch (error) {
       throw error;
     }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number): Promise<ProvinceEntity> {
+  @Get('/:id')
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ProvinceEntity> {
     try {
-      const province = this.provinceService.findOne(id);
-      if (!province) throw new HttpException('Province not found', 404);
-      return province;
+      return await this.provinceService.findOne(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Post('/')
+  async create(@Body() body: CreateProvinceDto) {
+    try {
+      return await this.provinceService.create(body);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Put('/:id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: CreateProvinceDto,
+  ) {
+    try {
+      return await this.provinceService.update(id, body);
     } catch (error) {
       throw error;
     }
