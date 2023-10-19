@@ -1,9 +1,10 @@
 import { ProductEntity } from 'src/modules/product/product.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { ServiceStateEntity } from 'src/modules/service-state/service-state.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ServicePriorityEntity } from '../service-priority/service-priority.entity';
 import { FailureTypeEntity } from '../failure-type/failure-type.entity';
+import { ServiceHistoryEntity } from '../service-history/service-history.entity';
 
 @Entity('services')
 export class ServiceEntity extends BaseEntity {
@@ -51,4 +52,10 @@ export class ServiceEntity extends BaseEntity {
   // garantia del servicio
   @Column({ type: 'boolean', nullable: true, default: false })
   warranty: boolean;
+
+  @OneToMany(
+    () => ServiceHistoryEntity,
+    (serviceHistory) => serviceHistory.service,
+  )
+  serviceHistory: ServiceHistoryEntity[];
 }
