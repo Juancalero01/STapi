@@ -1,6 +1,16 @@
-import { Controller, Get, HttpException, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { TaxConditionService } from './tax-condition.service';
 import { TaxConditionEntity } from './tax-condition.entity';
+import { CreateTaxConditionDto } from './dto/create-tax-condition.dto';
+import { UpdateTaxConditionDto } from './dto/update-tax-condition.dto';
 
 @Controller('tax-condition')
 export class TaxConditionController {
@@ -9,22 +19,37 @@ export class TaxConditionController {
   @Get('/')
   async findAll(): Promise<TaxConditionEntity[]> {
     try {
-      const taxConditions = await this.taxConditionService.findAll();
-      if (!taxConditions.length)
-        throw new HttpException('Tax Conditions not found', 404);
-      return taxConditions;
+      return await this.taxConditionService.findAll();
     } catch (error) {
       throw error;
     }
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: number) {
+  @Get('/:id')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     try {
-      const taxCondition = await this.taxConditionService.findOne(id);
-      if (!taxCondition)
-        throw new HttpException('Tax Condition not found', 404);
-      return taxCondition;
+      return await this.taxConditionService.findOne(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Post('/')
+  async create(@Body() body: CreateTaxConditionDto) {
+    try {
+      return await this.taxConditionService.create(body);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Put('/:id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateTaxConditionDto,
+  ) {
+    try {
+      return await this.taxConditionService.update(id, body);
     } catch (error) {
       throw error;
     }
