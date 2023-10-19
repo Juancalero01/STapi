@@ -4,8 +4,8 @@ import {
   Post,
   Body,
   Param,
-  HttpException,
   Put,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { FailureTypeService } from './failure-type.service';
 import { CreateFailureTypeDto } from './dto/create-failure-type.dto';
@@ -19,30 +19,27 @@ export class FailureTypeController {
   @Get('/')
   async findAll(): Promise<FailureTypeEntity[]> {
     try {
-      const failureTypes = await this.failureTypeService.findAll();
-      return failureTypes;
+      return await this.failureTypeService.findAll();
     } catch (error) {
       throw error;
     }
   }
 
   @Get('/:id')
-  async findOne(@Param('id') id: number): Promise<FailureTypeEntity> {
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<FailureTypeEntity> {
     try {
-      const faiulreType = await this.failureTypeService.findOne(id);
-      return faiulreType;
+      return await this.failureTypeService.findOne(id);
     } catch (error) {
       throw error;
     }
   }
 
   @Post('/')
-  async create(
-    @Body() createFailureTypeDto: CreateFailureTypeDto,
-  ): Promise<void> {
+  async create(@Body() body: CreateFailureTypeDto): Promise<void> {
     try {
-      if (await this.failureTypeService.create(createFailureTypeDto))
-        throw new HttpException('Failure type already exists', 409);
+      await this.failureTypeService.create(body);
     } catch (error) {
       throw error;
     }
@@ -50,24 +47,11 @@ export class FailureTypeController {
 
   @Put('/:id')
   async update(
-    @Param('id') id: number,
-    @Body() updateFailureTypeDto: UpdateFailureTypeDto,
-  ) {
-    try {
-      if (!(await this.failureTypeService.update(id, updateFailureTypeDto)))
-        throw new HttpException('Failure type not found', 404);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Post('/import')
-  async importProductTypes(
-    @Body()
-    failureTypes: CreateFailureTypeDto[],
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateFailureTypeDto,
   ): Promise<void> {
     try {
-      await this.failureTypeService.importFailureTypes(failureTypes);
+      await this.failureTypeService.update(id, body);
     } catch (error) {
       throw error;
     }

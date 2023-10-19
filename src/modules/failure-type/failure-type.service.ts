@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateFailureTypeDto } from './dto/create-failure-type.dto';
 import { UpdateFailureTypeDto } from './dto/update-failure-type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -14,7 +14,10 @@ export class FailureTypeService {
 
   async findAll(): Promise<FailureTypeEntity[]> {
     try {
-      return await this.failureTypeRepository.find();
+      return await this.failureTypeRepository.find({
+        select: ['id', 'name', 'isActive'],
+        order: { id: 'ASC' },
+      });
     } catch (error) {
       throw error;
     }
@@ -22,54 +25,49 @@ export class FailureTypeService {
 
   async findOne(id: number): Promise<FailureTypeEntity> {
     try {
-      return await this.failureTypeRepository.findOne({ where: { id } });
+      return await this.failureTypeRepository.findOne({
+        where: { id },
+        select: ['id', 'name', 'isActive'],
+      });
     } catch (error) {
       throw error;
     }
   }
 
-  async findOneByName(name: string): Promise<FailureTypeEntity> {
+  async findOneName(name: string): Promise<FailureTypeEntity> {
     try {
-      return await this.failureTypeRepository.findOne({ where: { name } });
+      return await this.failureTypeRepository.findOne({
+        where: { name },
+      });
     } catch (error) {
       throw error;
     }
   }
 
-  async create(
-    createFailureTypeDto: CreateFailureTypeDto,
-  ): Promise<CreateFailureTypeDto> {
+  async create(body: CreateFailureTypeDto): Promise<void> {
     try {
-      const failureTypeFound = await this.findOneByName(
-        createFailureTypeDto.name,
-      );
-      if (!failureTypeFound)
-        await this.failureTypeRepository.save(createFailureTypeDto);
-      return failureTypeFound;
+      if (await this.findOneName(body.name))
+        throw new HttpException(
+          `FailureType with name ${body.name} already exists`,
+          409,
+        );
+      await this.failureTypeRepository.save(body);
     } catch (error) {
       throw error;
     }
   }
 
-  async update(
-    id: number,
-    updateFailureTypeDto: UpdateFailureTypeDto,
-  ): Promise<UpdateFailureTypeDto> {
+  async update(id: number, body: UpdateFailureTypeDto): Promise<void> {
     try {
-      const productTypeFound = await this.findOne(id);
-      if (productTypeFound)
-        await this.failureTypeRepository.update(id, updateFailureTypeDto);
-      return productTypeFound;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async importFailureTypes(
-    failureTypes: CreateFailureTypeDto[],
-  ): Promise<void> {
-    try {
-      await this.failureTypeRepository.save(failureTypes);
+      if (!(await this.findOne(id)))
+        throw new HttpException(`FailureType with id ${id} not found`, 404);
+      const failureTypeFound = await this.findOneName(body.name);
+      if (failureTypeFound && failureTypeFound.id !== id)
+        throw new HttpException(
+          `FailureType with name ${body.name} already exists`,
+          409,
+        );
+      await this.failureTypeRepository.update(id, body);
     } catch (error) {
       throw error;
     }
