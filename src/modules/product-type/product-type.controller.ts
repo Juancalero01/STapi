@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { ProductTypeService } from './product-type.service';
 import { ProductTypeEntity } from './product-type.entity';
-import { CreateProductTypeDto } from './dto/create-type-product.dto';
-import { UpdateProductTypeDto } from './dto/update-type-product.dto';
+import { CreateProductTypeDto } from './dto/create-product-type.dto';
+import { UpdateProductTypeDto } from './dto/update-product-type.dto';
 
 @Controller('product-type')
 export class ProductTypeController {

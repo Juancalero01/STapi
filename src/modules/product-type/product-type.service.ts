@@ -2,8 +2,8 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductTypeEntity } from './product-type.entity';
 import { Repository } from 'typeorm';
-import { CreateProductTypeDto } from './dto/create-type-product.dto';
-import { UpdateProductTypeDto } from './dto/update-type-product.dto';
+import { CreateProductTypeDto } from './dto/create-product-type.dto';
+import { UpdateProductTypeDto } from './dto/update-product-type.dto';
 
 @Injectable()
 export class ProductTypeService {
