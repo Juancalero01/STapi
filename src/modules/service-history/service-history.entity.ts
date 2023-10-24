@@ -1,14 +1,15 @@
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { ServiceEntity } from '../service/service.entity';
+import { ServiceStateEntity } from '../service-state/service-state.entity';
 
 @Entity('service_histories')
 export class ServiceHistoryEntity extends BaseEntity {
-  @Column()
-  stateCurrent: string;
+  @ManyToOne(() => ServiceStateEntity, (state) => state.currentServiceHistory)
+  stateCurrent: ServiceStateEntity;
 
-  @Column()
-  statePrevious: string;
+  @ManyToOne(() => ServiceStateEntity, (state) => state.nextServiceHistory)
+  stateNext: ServiceStateEntity;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
   remarks: string;

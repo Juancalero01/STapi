@@ -1,34 +1,68 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  ParseIntPipe,
+  Put,
+} from '@nestjs/common';
 import { ServiceHistoryService } from './service-history.service';
 import { CreateServiceHistoryDto } from './dto/create-service-history.dto';
 import { UpdateServiceHistoryDto } from './dto/update-service-history.dto';
+import { ServiceHistoryEntity } from './service-history.entity';
 
 @Controller('service-history')
 export class ServiceHistoryController {
   constructor(private readonly serviceHistoryService: ServiceHistoryService) {}
 
-  @Post()
-  create(@Body() createServiceHistoryDto: CreateServiceHistoryDto) {
-    return this.serviceHistoryService.create(createServiceHistoryDto);
+  @Get('/')
+  async findAll(): Promise<ServiceHistoryEntity[]> {
+    try {
+      return await this.serviceHistoryService.findAll();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  @Get()
-  findAll() {
-    return this.serviceHistoryService.findAll();
+  @Get('/:id')
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ServiceHistoryEntity> {
+    try {
+      return await this.serviceHistoryService.findOne(id);
+    } catch (error) {}
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.serviceHistoryService.findOne(+id);
+  @Post('/')
+  async create(@Body() body: CreateServiceHistoryDto) {
+    try {
+      return await this.serviceHistoryService.create(body);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateServiceHistoryDto: UpdateServiceHistoryDto) {
-    return this.serviceHistoryService.update(+id, updateServiceHistoryDto);
+  @Put('/:id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateServiceHistoryDto,
+  ) {
+    try {
+      return await this.serviceHistoryService.update(id, body);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.serviceHistoryService.remove(+id);
+  @Get('s/:id')
+  async findService(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ServiceHistoryEntity[]> {
+    try {
+      return await this.serviceHistoryService.findService(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }
