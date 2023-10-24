@@ -10,6 +10,7 @@ import { ServiceModule } from './modules/service/service.module';
 import { ServicePriorityModule } from './modules/service-priority/service-priority.module';
 import { FailureTypeModule } from './modules/failure-type/failure-type.module';
 import { ServiceHistoryModule } from './modules/service-history/service-history.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ServiceHistoryModule } from './modules/service-history/service-history.
     ProvinceModule,
     TaxConditionModule,
     FailureTypeModule,
+    UserModule,
   ],
 })
 export class AppModule {}
