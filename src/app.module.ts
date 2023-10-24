@@ -9,6 +9,7 @@ import { ServiceStateModule } from './modules/service-state/service-state.module
 import { ServiceModule } from './modules/service/service.module';
 import { ServicePriorityModule } from './modules/service-priority/service-priority.module';
 import { FailureTypeModule } from './modules/failure-type/failure-type.module';
+import { ServiceHistoryModule } from './modules/service-history/service-history.module';
 
 @Module({
   imports: [
@@ -26,11 +27,11 @@ import { FailureTypeModule } from './modules/failure-type/failure-type.module';
     ProductModule,
     ProductTypeModule,
     ServiceModule,
-    // Shared Modules,
-    ProvinceModule,
-    TaxConditionModule,
+    ServiceHistoryModule,
     ServiceStateModule,
     ServicePriorityModule,
+    ProvinceModule,
+    TaxConditionModule,
     FailureTypeModule,
   ],
 })
