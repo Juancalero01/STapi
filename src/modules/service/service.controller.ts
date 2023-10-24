@@ -4,8 +4,8 @@ import {
   Post,
   Body,
   Param,
-  HttpException,
   Put,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { ServiceService } from './service.service';
 import { ServiceEntity } from './service.entity';
@@ -19,20 +19,16 @@ export class ServiceController {
   @Get('/')
   async findAll(): Promise<ServiceEntity[]> {
     try {
-      const services = await this.serviceService.findAll();
-      if (!services) throw new HttpException('Services not found', 404);
-      return services;
+      return await this.serviceService.findAll();
     } catch (error) {
       throw error;
     }
   }
 
   @Get('/:id')
-  async findOne(@Param('id') id: number): Promise<ServiceEntity> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<ServiceEntity> {
     try {
-      const service = await this.serviceService.findOne(id);
-      if (!service) throw new HttpException('Service not found', 404);
-      return service;
+      return await this.serviceService.findOne(id);
     } catch (error) {
       throw error;
     }
@@ -41,9 +37,7 @@ export class ServiceController {
   @Post('/')
   async create(@Body() body: CreateServiceDto): Promise<void> {
     try {
-      if (await this.serviceService.create(body))
-        // refactorizar este endpoint para que devuelva si el servicio ya existe
-        throw new HttpException('Service not created', 400);
+      await this.serviceService.create(body);
     } catch (error) {
       throw error;
     }
@@ -51,25 +45,31 @@ export class ServiceController {
 
   @Put('/:id')
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateServiceDto,
   ): Promise<void> {
     try {
-      if (!(await this.serviceService.update(id, body)))
-        // refactorizar este endpoint para que devuelva si el servicio no se encuentra
-        throw new HttpException('Service not updated', 400);
+      await this.serviceService.update(id, body);
     } catch (error) {
       throw error;
     }
   }
 
-  @Get('/last-reclaim-number')
-  async lastReclaimNumber(): Promise<string> {
+  @Get('/last-reclaim')
+  async lastReclaim(): Promise<string> {
     try {
-      const lastReclaimNumber = await this.serviceService.lastReclaimNumber();
-      if (!lastReclaimNumber)
-        throw new HttpException('Last reclaim number not found', 404);
-      return lastReclaimNumber;
+      const testLog = await this.serviceService.lastReclaim();
+      console.log('Test controller log:', testLog);
+      return testLog;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('test')
+  async test(): Promise<string> {
+    try {
+      return 'Test';
     } catch (error) {
       throw error;
     }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceEntity } from './service.entity';
 import { Repository } from 'typeorm';
@@ -12,7 +12,7 @@ export class ServiceService {
     private readonly serviceRepository: Repository<ServiceEntity>,
   ) {}
 
-  async findAll() {
+  async findAll(): Promise<ServiceEntity[]> {
     try {
       return await this.serviceRepository.find();
     } catch (error) {
@@ -20,7 +20,7 @@ export class ServiceService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: number): Promise<ServiceEntity> {
     try {
       return await this.serviceRepository.findOne({ where: { id } });
     } catch (error) {
@@ -28,31 +28,38 @@ export class ServiceService {
     }
   }
 
-  async create(body: CreateServiceDto) {
+  // create fn for search service by reclaim
+
+  async create(body: CreateServiceDto): Promise<void> {
     try {
-      const service = this.serviceRepository.save(body);
-      return service;
+      // Refactorizar este endpoint para que devuelva si el servicio ya existe y
+      // que tambien verifique el estado del servicio.
+
+      await this.serviceRepository.save(body);
     } catch (error) {
       throw error;
     }
   }
 
-  async update(id: number, body: UpdateServiceDto) {
+  async update(id: number, body: UpdateServiceDto): Promise<void> {
     try {
-      const service = await this.findOne(id);
-      if (service) await this.serviceRepository.update(id, body);
-      return service;
+      // Refactorizar este endpoint para que devuelva si el servicio no se encuentra
+      // y que tambien verifique el estado del servicio.
+      if (!(await this.findOne(id)))
+        throw new HttpException(`Service with id: ${id} not found`, 404);
+      await this.serviceRepository.update(id, body);
     } catch (error) {
       throw error;
     }
   }
 
-  async lastReclaimNumber(): Promise<string> {
+  async lastReclaim(): Promise<string> {
     try {
-      const service = await this.serviceRepository.findOne({
-        order: { reclaim: 'DESC' },
+      const lastService = await this.serviceRepository.findOne({
+        order: { id: 'DESC' },
       });
-      return service.reclaim;
+      console.log('Test service log:', lastService);
+      return lastService.reclaim;
     } catch (error) {
       throw error;
     }

@@ -7,7 +7,7 @@ export class CreateServiceDto {
   failure: string;
   reference?: string;
   remarks: string;
-  dateEntry: Date;
+  dateEntry: Date; //Posible eliminación ya que existe la fecha de creación en la entidad
   warranty: boolean;
   product: ProductEntity;
   state: ServiceStateEntity;
