@@ -1,6 +1,7 @@
 import { ServiceEntity } from 'src/modules/service/service.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { ServiceHistoryEntity } from '../service-history/service-history.entity';
 
 @Entity('service_states')
 export class ServiceStateEntity extends BaseEntity {
@@ -9,4 +10,10 @@ export class ServiceStateEntity extends BaseEntity {
 
   @OneToMany(() => ServiceEntity, (service) => service.state)
   service: ServiceEntity;
+
+  @OneToMany(() => ServiceHistoryEntity, (history) => history.stateCurrent)
+  currentServiceHistory: ServiceHistoryEntity[];
+
+  @OneToMany(() => ServiceHistoryEntity, (history) => history.stateNext)
+  nextServiceHistory: ServiceHistoryEntity[];
 }
