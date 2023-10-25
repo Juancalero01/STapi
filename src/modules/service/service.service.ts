@@ -32,15 +32,18 @@ export class ServiceService {
 
   async findAll(): Promise<ServiceEntity[]> {
     try {
-      return await this.serviceRepository
-        .createQueryBuilder('service')
-        .select(this.querySelect)
-        .innerJoin('service.product', 'product')
-        .innerJoin('service.state', 'serviceState')
-        .innerJoin('service.priority', 'servicePriority')
-        .innerJoin('service.failureType', 'failureType')
-        .where('serviceState.id != 9')
-        .getMany();
+      return await this.serviceRepository.find({
+        relations: ['product', 'state', 'priority', 'failureType'],
+      });
+      // return await this.serviceRepository
+      //   .createQueryBuilder('service')
+      //   .select(this.querySelect)
+      //   .innerJoin('service.product', 'product')
+      //   .innerJoin('service.state', 'serviceState')
+      //   .innerJoin('service.priority', 'servicePriority')
+      //   .innerJoin('service.failureType', 'failureType')
+      //   .where('serviceState.id != 9')
+      //   .getMany();
     } catch (error) {
       throw error;
     }
