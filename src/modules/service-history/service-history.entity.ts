@@ -2,6 +2,7 @@ import { BaseEntity } from 'src/shared/entities/base.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { ServiceEntity } from '../service/service.entity';
 import { ServiceStateEntity } from '../service-state/service-state.entity';
+import { UserEntity } from '../user/user.entity';
 
 @Entity('service_histories')
 export class ServiceHistoryEntity extends BaseEntity {
@@ -16,4 +17,7 @@ export class ServiceHistoryEntity extends BaseEntity {
 
   @ManyToOne(() => ServiceEntity, (service) => service.serviceHistory)
   service: ServiceEntity;
+
+  @ManyToOne(() => UserEntity, (user) => user.serviceHistory)
+  user: UserEntity;
 }
