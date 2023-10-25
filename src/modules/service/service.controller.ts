@@ -54,24 +54,4 @@ export class ServiceController {
       throw error;
     }
   }
-
-  @Get('/last-reclaim')
-  async lastReclaim(): Promise<string> {
-    try {
-      const testLog = await this.serviceService.lastReclaim();
-      console.log('Test controller log:', testLog);
-      return testLog;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Get('test')
-  async test(): Promise<string> {
-    try {
-      return 'Test';
-    } catch (error) {
-      throw error;
-    }
-  }
 }
