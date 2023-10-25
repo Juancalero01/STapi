@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,7 +15,16 @@ export class UserService {
 
   async findAll(): Promise<UserEntity[]> {
     try {
-      return await this.userRepository.find();
+      return await this.userRepository.find({
+        select: [
+          'id',
+          'username',
+          'email',
+          'fullname',
+          'createdAt',
+          'updatedAt',
+        ],
+      });
     } catch (error) {
       throw error;
     }
@@ -23,7 +32,17 @@ export class UserService {
 
   async findOne(id: number) {
     try {
-      return await this.userRepository.findOne({ where: { id } });
+      return await this.userRepository.findOne({
+        where: { id },
+        select: [
+          'id',
+          'username',
+          'email',
+          'fullname',
+          'createdAt',
+          'updatedAt',
+        ],
+      });
     } catch (error) {
       throw error;
     }
@@ -45,7 +64,6 @@ export class UserService {
     }
   }
 
-  // refactorizar endpoint
   async create(body: CreateUserDto): Promise<void> {
     try {
       if (
@@ -62,6 +80,14 @@ export class UserService {
 
   async update(id: number, body: UpdateUserDto): Promise<void> {
     try {
+      if (!(await this.findOne(id)))
+        throw new HttpException('User not found', 404);
+      if (await this.findOneEmail(body.email))
+        throw new HttpException('Email already exists', 409);
+      if (await this.findOneUsername(body.username))
+        throw new HttpException('Username already exists', 409);
+      const password = await hash(body.password, 10);
+      body.password = password;
       await this.userRepository.update(id, body);
     } catch (error) {
       throw error;
