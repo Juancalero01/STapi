@@ -15,10 +15,12 @@ export class ProductEntity extends BaseEntity {
   @Column({ type: 'datetime', nullable: false })
   deliveryDate: Date;
 
-  @ManyToOne(() => ProductTypeEntity, (productType) => productType.products)
+  @ManyToOne(() => ProductTypeEntity, (productType) => productType.products, {
+    eager: true,
+  })
   productType: ProductTypeEntity;
 
-  @ManyToOne(() => ClientEntity, (client) => client.products)
+  @ManyToOne(() => ClientEntity, (client) => client.products, { eager: true })
   client: ClientEntity;
 
   @OneToMany(() => ServiceEntity, (service) => service.product)

@@ -17,7 +17,9 @@ export class ServiceEntity extends BaseEntity {
   @ManyToOne(() => ServiceStateEntity, (serviceState) => serviceState.service)
   state: ServiceStateEntity;
 
-  @ManyToOne(() => ProductEntity, (product) => product.service)
+  @ManyToOne(() => ProductEntity, (product) => product.service, {
+    eager: true,
+  })
   product: ProductEntity;
 
   @ManyToOne(
