@@ -16,6 +16,15 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
+  @Get('/r')
+  async findLastReclaim(): Promise<string> {
+    try {
+      return await this.serviceService.findLastReclaim();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('/')
   async findAll(): Promise<ServiceEntity[]> {
     try {

@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceEntity } from './service.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 
@@ -34,6 +34,7 @@ export class ServiceService {
     try {
       return await this.serviceRepository.find({
         relations: ['product', 'state', 'priority', 'failureType'],
+        where: { state: Not(9) },
       });
     } catch (error) {
       throw error;
@@ -61,6 +62,20 @@ export class ServiceService {
       if (!(await this.findOne(id)))
         throw new HttpException(`Service with id: ${id} not found`, 404);
       await this.serviceRepository.update(id, body);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findLastReclaim(): Promise<string> {
+    try {
+      const serviceFound = await this.serviceRepository
+        .createQueryBuilder('service')
+        .orderBy('service.id', 'DESC')
+        .limit(1)
+        .getOne();
+
+      return JSON.stringify(serviceFound.reclaim);
     } catch (error) {
       throw error;
     }
