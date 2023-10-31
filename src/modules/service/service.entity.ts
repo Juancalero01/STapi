@@ -14,7 +14,9 @@ export class ServiceEntity extends BaseEntity {
   @Column({ type: 'varchar', nullable: false })
   reclaim: string;
 
-  @ManyToOne(() => ServiceStateEntity, (serviceState) => serviceState.service)
+  @ManyToOne(() => ServiceStateEntity, (serviceState) => serviceState.service, {
+    eager: true,
+  })
   state: ServiceStateEntity;
 
   @ManyToOne(() => ProductEntity, (product) => product.service, {
@@ -25,6 +27,9 @@ export class ServiceEntity extends BaseEntity {
   @ManyToOne(
     () => ServicePriorityEntity,
     (servicePriority) => servicePriority.service,
+    {
+      eager: true,
+    },
   )
   priority: ServicePriorityEntity;
 
@@ -37,7 +42,9 @@ export class ServiceEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true, default: null })
   failure: string;
 
-  @ManyToOne(() => FailureTypeEntity, (failureType) => failureType.service)
+  @ManyToOne(() => FailureTypeEntity, (failureType) => failureType.service, {
+    eager: true,
+  })
   failureType: FailureTypeEntity;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
