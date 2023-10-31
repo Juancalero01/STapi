@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceEntity } from './service.entity';
-import { Not, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 
@@ -34,7 +34,7 @@ export class ServiceService {
     try {
       return await this.serviceRepository.find({
         relations: ['product', 'state', 'priority', 'failureType'],
-        where: { state: Not(9) },
+        where: { state: Not(In([8, 9])) },
       });
     } catch (error) {
       throw error;
