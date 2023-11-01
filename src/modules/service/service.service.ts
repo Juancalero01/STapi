@@ -67,7 +67,7 @@ export class ServiceService {
     }
   }
 
-  async findLastReclaim(): Promise<string> {
+  async findLastReclaim(): Promise<string | null> {
     try {
       const serviceFound = await this.serviceRepository
         .createQueryBuilder('service')
@@ -75,7 +75,11 @@ export class ServiceService {
         .limit(1)
         .getOne();
 
-      return JSON.stringify(serviceFound.reclaim);
+      if (serviceFound) {
+        return JSON.stringify(serviceFound.reclaim);
+      } else {
+        return null;
+      }
     } catch (error) {
       throw error;
     }

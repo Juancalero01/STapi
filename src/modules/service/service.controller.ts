@@ -17,7 +17,7 @@ export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
   @Get('/r')
-  async findLastReclaim(): Promise<string> {
+  async findLastReclaim(): Promise<string | null> {
     try {
       return await this.serviceService.findLastReclaim();
     } catch (error) {
