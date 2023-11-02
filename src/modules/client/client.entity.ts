@@ -20,6 +20,7 @@ export class ClientEntity extends BaseEntity {
   @ManyToOne(() => TaxConditionEntity, (taxCondition) => taxCondition.clients, {
     nullable: true,
     cascade: true,
+    eager: true,
   })
   taxCondition: TaxConditionEntity;
 
@@ -42,6 +43,7 @@ export class ClientEntity extends BaseEntity {
   @ManyToOne(() => ProvinceEntity, (province) => province.clients, {
     nullable: true,
     cascade: true,
+    eager: true,
   })
   province: ProvinceEntity;
 

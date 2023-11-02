@@ -12,38 +12,9 @@ export class ClientService {
     private readonly clientRepository: Repository<ClientEntity>,
   ) {}
 
-  private readonly querySelect: string[] = [
-    'client.id',
-    'client.taxpayerName',
-    'client.taxpayerId',
-    'client.taxpayerEmail',
-    'client.taxpayerPhone',
-    'client.street',
-    'client.number',
-    'client.floor',
-    'client.office',
-    'client.postalCode',
-    'client.contactName',
-    'client.contactEmail',
-    'client.contactPhone',
-    'client.comment',
-    'client.isActive',
-    'taxCondition.id',
-    'taxCondition.name',
-    'province.id',
-    'province.name',
-  ];
-
   async findAll(): Promise<ClientEntity[]> {
     try {
-      const clients = await this.clientRepository
-        .createQueryBuilder('client')
-        .select(this.querySelect)
-        .innerJoin('client.taxCondition', 'taxCondition')
-        .innerJoin('client.province', 'province')
-        .orderBy('client.taxpayerName', 'ASC')
-        .getMany();
-      return clients || [];
+      return await this.clientRepository.find();
     } catch (error) {
       throw error;
     }
@@ -51,14 +22,9 @@ export class ClientService {
 
   async findOne(id: number): Promise<ClientEntity> {
     try {
-      const client = await this.clientRepository
-        .createQueryBuilder('client')
-        .select(this.querySelect)
-        .innerJoin('client.taxCondition', 'taxCondition')
-        .innerJoin('client.province', 'province')
-        .where(`client.id = ${id}`)
-        .getOne();
-      return client || null;
+      return await this.clientRepository.findOne({
+        where: { id },
+      });
     } catch (error) {
       throw error;
     }
