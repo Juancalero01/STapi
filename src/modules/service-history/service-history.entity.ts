@@ -12,7 +12,7 @@ export class ServiceHistoryEntity extends BaseEntity {
   @ManyToOne(() => ServiceStateEntity, (state) => state.nextServiceHistory)
   stateNext: ServiceStateEntity;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 500, nullable: false })
   remarks: string;
 
   @ManyToOne(() => ServiceEntity, (service) => service.serviceHistory)
