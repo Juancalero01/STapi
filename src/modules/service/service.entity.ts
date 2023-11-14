@@ -1,11 +1,19 @@
 import { ProductEntity } from 'src/modules/product/product.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { ServiceStateEntity } from 'src/modules/service-state/service-state.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 import { ServicePriorityEntity } from '../service-priority/service-priority.entity';
 import { FailureTypeEntity } from '../failure-type/failure-type.entity';
 import { ServiceHistoryEntity } from '../service-history/service-history.entity';
 
+// TODO: Resolver problemas de many to many con failure types
 @Entity('services')
 export class ServiceEntity extends BaseEntity {
   @Column({ type: 'date', nullable: false })
@@ -42,10 +50,11 @@ export class ServiceEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true, default: null })
   failure: string;
 
-  @ManyToOne(() => FailureTypeEntity, (failureType) => failureType.service, {
-    eager: true,
+  @ManyToMany(() => FailureTypeEntity, (failureType) => failureType.services, {
+    nullable: true,
   })
-  failureType: FailureTypeEntity;
+  @JoinTable()
+  failureTypes: FailureTypeEntity[];
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   remarks: string;

@@ -8,5 +8,6 @@ import { FailureTypeEntity } from './failure-type.entity';
   imports: [TypeOrmModule.forFeature([FailureTypeEntity])],
   controllers: [FailureTypeController],
   providers: [FailureTypeService],
+  exports: [FailureTypeService],
 })
 export class FailureTypeModule {}

@@ -14,5 +14,5 @@ export class CreateServiceDto {
   product: ProductEntity;
   state: ServiceStateEntity;
   priority: ServicePriorityEntity;
-  failureType: FailureTypeEntity;
+  failureTypes: FailureTypeEntity[];
 }

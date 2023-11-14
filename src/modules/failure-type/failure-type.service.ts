@@ -3,7 +3,7 @@ import { CreateFailureTypeDto } from './dto/create-failure-type.dto';
 import { UpdateFailureTypeDto } from './dto/update-failure-type.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FailureTypeEntity } from './failure-type.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class FailureTypeService {
@@ -28,6 +28,21 @@ export class FailureTypeService {
       return await this.failureTypeRepository.findOne({
         where: { id },
         select: ['id', 'name', 'isActive'],
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findIds(ids: FailureTypeEntity[]): Promise<FailureTypeEntity[]> {
+    try {
+      console.log(
+        await this.failureTypeRepository.find({
+          where: { id: In(ids) },
+        }),
+      );
+      return await this.failureTypeRepository.find({
+        where: { id: In(ids) },
       });
     } catch (error) {
       throw error;
