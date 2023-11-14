@@ -5,6 +5,7 @@ import { In, Not, Repository } from 'typeorm';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { FailureTypeService } from '../failure-type/failure-type.service';
+import { ServiceStateEntity } from '../service-state/service-state.entity';
 
 @Injectable()
 export class ServiceService {
@@ -45,114 +46,32 @@ export class ServiceService {
     }
   }
 
-  // TODO: REFACTORIZAR
   async update(id: number, body: UpdateServiceDto): Promise<void> {
     try {
-      console.log({
-        test: 'test before update',
-        id: id,
-        body: body,
-      });
-
-      if (body.failureTypes && body.failureTypes.length > 0) {
-        const failureTypes = await this.failureTypeService.findIds(
-          body.failureTypes,
-        );
-        body.failureTypes = failureTypes;
+      const serviceFound = await this.findOne(id);
+      if (!serviceFound) {
+        throw new HttpException('Service not found', 404);
       }
-
-      console.log({
-        test: 'test after update',
-        id: id,
-        body: body,
+      if (body.failureTypes === null) {
+        body.failureTypes = [];
+      }
+      await this.serviceRepository
+        .createQueryBuilder('service')
+        .relation('failureTypes')
+        .of(serviceFound.id)
+        .addAndRemove(body.failureTypes, serviceFound.failureTypes);
+      await this.serviceRepository.update(id, {
+        reference: body.reference,
+        securityStrap: body.securityStrap,
+        failure: body.failure,
+        remarks: body.remarks,
+        warranty: body.warranty,
+        priority: body.priority,
       });
-
-      await this.serviceRepository.update(id, body);
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
-
-  // async update(id: number, body: UpdateServiceDto): Promise<void> {
-  //   const updateEntity = body; // Objeto para almacenar propiedades de la entidad a actualizar
-
-  //   try {
-  //     const serviceFound = await this.serviceRepository.findOne({
-  //       where: { id },
-  //       relations: ['failureTypes'],
-  //     });
-
-  //     if (!serviceFound) {
-  //       throw new HttpException(`Service with id: ${id} not found`, 404);
-  //     }
-
-  //     // Actualizar las relaciones muchos a muchos si se proporcionan en el body
-  //     if (body.failureTypes && body.failureTypes.length > 0) {
-  //       const failureTypeIds = await this.failureTypeService.findIds(
-  //         body.failureTypes,
-  //       );
-
-  //       // Actualizar las relaciones muchos a muchos
-  //       serviceFound.failureTypes = failureTypeIds;
-
-  //       // Utilizar save para actualizar las relaciones
-  //       await this.serviceRepository.save(serviceFound);
-  //     }
-
-  //     // Utilizar update para actualizar las propiedades de la entidad
-  //     await this.serviceRepository.update(id, updateEntity);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
-
-  // async update(id: number, body: UpdateServiceDto): Promise<void> {
-  //   try {
-  //     const serviceFound = await this.findOne(id);
-  //     if (!serviceFound)
-  //       throw new HttpException(`Service with id: ${id} not found`, 404);
-
-  //     const failureTypes = await this.failureTypeService.findIds(
-  //       body.failureTypes,
-  //     );
-  //     body.failureTypes = failureTypes;
-  //     await this.serviceRepository.update(id, body);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
-
-  // const failureTypes = await this.failureTypeService.findIds(
-  //   body.failureTypes,
-  // );
-  // serviceFound.failureTypes = body.failureTypes;
-  // console.log(serviceFound);
-  // if (!(await this.findOne(id)))
-  //   throw new HttpException(`Service with id: ${id} not found`, 404);
-  // await this.serviceRepository.update(id, body);
-
-  // async update(id: number, body: UpdateServiceDto): Promise<void> {
-  //   try {
-  //     const serviceFound = await this.serviceRepository.findOne({
-  //       where: { id },
-  //       relations: ['failureTypes'],
-  //     });
-
-  //     if (!serviceFound) {
-  //       throw new HttpException(`Service with id: ${id} not found`, 404);
-  //     }
-
-  //     const failureTypeIds = await this.failureTypeService.findIds(
-  //       body.failureTypes,
-  //     );
-
-  //     // Actualizar las relaciones muchos a muchos
-  //     serviceFound.failureTypes = failureTypeIds;
-
-  //     // Ahora puedes actualizar y guardar la entidad
-  //     await this.serviceRepository.save(serviceFound);
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
 
   async findLastReclaim(): Promise<string | null> {
     try {
@@ -167,6 +86,17 @@ export class ServiceService {
       } else {
         return null;
       }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //TODO: Create method for update service state.
+  async updateState(id: number, state: ServiceStateEntity): Promise<void> {
+    try {
+      await this.serviceRepository.update(id, {
+        state: state,
+      });
     } catch (error) {
       throw error;
     }

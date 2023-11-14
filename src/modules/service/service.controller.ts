@@ -11,6 +11,7 @@ import { ServiceService } from './service.service';
 import { ServiceEntity } from './service.entity';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
+import { ServiceStateEntity } from '../service-state/service-state.entity';
 
 @Controller('service')
 export class ServiceController {
@@ -59,6 +60,18 @@ export class ServiceController {
   ): Promise<void> {
     try {
       await this.serviceService.update(id, body);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Put('s/:id')
+  async updateState(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() state: ServiceStateEntity,
+  ): Promise<void> {
+    try {
+      await this.serviceService.updateState(id, state);
     } catch (error) {
       throw error;
     }

@@ -13,7 +13,7 @@ import { ServicePriorityEntity } from '../service-priority/service-priority.enti
 import { FailureTypeEntity } from '../failure-type/failure-type.entity';
 import { ServiceHistoryEntity } from '../service-history/service-history.entity';
 
-// TODO: Resolver problemas de many to many con failure types
+//! EN FASE DE PRUEBA EL SERVICIO, SE REQUIERE MAS TESTING POR POSIBLES FALLAS DE IMPLEMENTACION EN EL FRONTEND
 @Entity('services')
 export class ServiceEntity extends BaseEntity {
   @Column({ type: 'date', nullable: false })
