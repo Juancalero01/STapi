@@ -4,7 +4,6 @@ import { ServiceEntity } from './service.entity';
 import { In, Not, Repository } from 'typeorm';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
-import { FailureTypeService } from '../failure-type/failure-type.service';
 import { ServiceStateEntity } from '../service-state/service-state.entity';
 
 @Injectable()
@@ -12,8 +11,6 @@ export class ServiceService {
   constructor(
     @InjectRepository(ServiceEntity)
     private readonly serviceRepository: Repository<ServiceEntity>,
-
-    private readonly failureTypeService: FailureTypeService,
   ) {}
 
   async findAll(): Promise<ServiceEntity[]> {
@@ -92,7 +89,6 @@ export class ServiceService {
     }
   }
 
-  //TODO: Create method for update service state.
   async updateState(id: number, state: ServiceStateEntity): Promise<void> {
     try {
       await this.serviceRepository.update(id, {
