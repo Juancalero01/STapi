@@ -16,7 +16,7 @@ import { ServiceHistoryEntity } from '../service-history/service-history.entity'
 //! EN FASE DE PRUEBA EL SERVICIO, SE REQUIERE MAS TESTING POR POSIBLES FALLAS DE IMPLEMENTACION EN EL FRONTEND
 @Entity('services')
 export class ServiceEntity extends BaseEntity {
-  @Column({ type: 'date', nullable: false })
+  @Column({ type: 'datetime', nullable: false })
   dateEntry: Date;
 
   @Column({ type: 'varchar', nullable: false })
@@ -42,7 +42,10 @@ export class ServiceEntity extends BaseEntity {
   priority: ServicePriorityEntity;
 
   @Column({ type: 'varchar', length: 255, nullable: true, default: null })
-  reference: string;
+  startReference: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true, default: null })
+  endReference: string;
 
   @Column({ type: 'boolean', nullable: true, default: false })
   securityStrap: boolean;

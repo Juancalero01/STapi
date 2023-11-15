@@ -61,7 +61,8 @@ export class ServiceService {
         .of(serviceFound.id)
         .addAndRemove(body.failureTypes, serviceFound.failureTypes);
       await this.serviceRepository.update(id, {
-        reference: body.reference,
+        startReference: body.startReference,
+        endReference: body.endReference,
         securityStrap: body.securityStrap,
         failure: body.failure,
         remarks: body.remarks,
