@@ -17,7 +17,7 @@ export class ServiceService {
     try {
       return await this.serviceRepository.find({
         relations: ['product', 'state', 'priority', 'failureTypes'],
-        where: { state: Not(In([8, 9])) },
+        where: { state: Not(In([11, 12])) },
       });
     } catch (error) {
       throw error;
@@ -64,6 +64,8 @@ export class ServiceService {
         failure: body.failure,
         remarks: body.remarks,
         warranty: body.warranty,
+        orderNumber: body.orderNumber,
+        quoteNumber: body.quoteNumber,
         priority: body.priority,
       });
     } catch (error) {

@@ -47,6 +47,12 @@ export class ServiceEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true, default: null })
   endReference: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true, default: null })
+  orderNumber: string;
+
+  @Column({ type: 'varchar', length: 255, nullable: true, default: null })
+  quoteNumber: string;
+
   @Column({ type: 'boolean', nullable: true, default: false })
   securityStrap: boolean;
 
@@ -59,7 +65,7 @@ export class ServiceEntity extends BaseEntity {
   @JoinTable()
   failureTypes: FailureTypeEntity[];
 
-  @Column({ type: 'varchar', length: 255, nullable: true })
+  @Column({ type: 'varchar', length: 500, nullable: true })
   remarks: string;
 
   @Column({ type: 'boolean', nullable: true, default: false })

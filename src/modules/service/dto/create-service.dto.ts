@@ -4,14 +4,18 @@ import { ServicePriorityEntity } from 'src/modules/service-priority/service-prio
 import { ServiceStateEntity } from 'src/modules/service-state/service-state.entity';
 
 export class CreateServiceDto {
+  dateEntry: Date;
   reclaim: string;
   startReference: string;
   endReference: string;
+  orderNumber: string;
+  quoteNumber: string;
   failure: string;
   remarks: string;
-  dateEntry: Date;
   warranty: boolean;
   securityStrap: boolean;
+
+  // With relations
   product: ProductEntity;
   state: ServiceStateEntity;
   priority: ServicePriorityEntity;
