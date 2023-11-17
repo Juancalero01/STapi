@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { ClientEntity } from './client.entity';

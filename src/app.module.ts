@@ -11,6 +11,7 @@ import { ServicePriorityModule } from './modules/service-priority/service-priori
 import { FailureTypeModule } from './modules/failure-type/failure-type.module';
 import { ServiceHistoryModule } from './modules/service-history/service-history.module';
 import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -19,11 +20,12 @@ import { UserModule } from './modules/user/user.module';
       host: 'localhost',
       port: 3306,
       username: 'root',
-      password: 'CNET2023',
+      password: 'root',
       database: 'cnet',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    AuthModule,
     ClientModule,
     ProductModule,
     ProductTypeModule,
