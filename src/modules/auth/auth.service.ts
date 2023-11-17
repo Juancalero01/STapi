@@ -21,7 +21,7 @@ export class AuthService {
     if (!isMatch) {
       throw new HttpException('Invalid credentials', 401);
     }
-    const payload = { username: user.username, sub: user.id };
+    const payload = { fullname: user.fullname, id: user.id };
     const token = await this.jwtService.sign(payload);
 
     const data = {
