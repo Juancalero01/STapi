@@ -6,12 +6,15 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ServiceHistoryService } from './service-history.service';
 import { CreateServiceHistoryDto } from './dto/create-service-history.dto';
 import { UpdateServiceHistoryDto } from './dto/update-service-history.dto';
 import { ServiceHistoryEntity } from './service-history.entity';
+import { JwtGuard } from '../auth/jwt/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('service-history')
 export class ServiceHistoryController {
   constructor(private readonly serviceHistoryService: ServiceHistoryService) {}

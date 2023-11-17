@@ -12,7 +12,9 @@ import { ClientService } from './client.service';
 import { ClientEntity } from './client.entity';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { JwtGuard } from '../auth/jwt/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('client')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}

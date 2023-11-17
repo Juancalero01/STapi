@@ -6,12 +6,15 @@ import {
   Param,
   Put,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { FailureTypeService } from './failure-type.service';
 import { CreateFailureTypeDto } from './dto/create-failure-type.dto';
 import { UpdateFailureTypeDto } from './dto/update-failure-type.dto';
 import { FailureTypeEntity } from './failure-type.entity';
+import { JwtGuard } from '../auth/jwt/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('failure-type')
 export class FailureTypeController {
   constructor(private readonly failureTypeService: FailureTypeService) {}

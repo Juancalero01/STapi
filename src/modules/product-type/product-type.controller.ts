@@ -6,12 +6,15 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductTypeService } from './product-type.service';
 import { ProductTypeEntity } from './product-type.entity';
 import { CreateProductTypeDto } from './dto/create-product-type.dto';
 import { UpdateProductTypeDto } from './dto/update-product-type.dto';
+import { JwtGuard } from '../auth/jwt/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('product-type')
 export class ProductTypeController {
   constructor(private readonly productTypeService: ProductTypeService) {}

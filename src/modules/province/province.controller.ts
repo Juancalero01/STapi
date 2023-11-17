@@ -6,11 +6,14 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ProvinceService } from './province.service';
 import { ProvinceEntity } from './province.entity';
 import { CreateProvinceDto } from './dto/create-province.dto';
+import { JwtGuard } from '../auth/jwt/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('province')
 export class ProvinceController {
   constructor(private readonly provinceService: ProvinceService) {}

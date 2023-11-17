@@ -6,11 +6,14 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ServicePriorityService } from './service-priority.service';
 import { CreateServicePriorityDto } from './dto/create-service-priority.dto';
 import { UpdateServicePriorityDto } from './dto/update-service-priority.dto';
+import { JwtGuard } from '../auth/jwt/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('service-priority')
 export class ServicePriorityController {
   constructor(

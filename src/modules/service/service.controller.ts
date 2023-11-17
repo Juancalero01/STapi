@@ -6,13 +6,16 @@ import {
   Param,
   Put,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ServiceService } from './service.service';
 import { ServiceEntity } from './service.entity';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { ServiceStateEntity } from '../service-state/service-state.entity';
+import { JwtGuard } from '../auth/jwt/jwt.guard';
 
+@UseGuards(JwtGuard)
 @Controller('service')
 export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
