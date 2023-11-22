@@ -29,6 +29,17 @@ export class ServiceController {
     }
   }
 
+  @Get('p/:id')
+  async findAllByProduct(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ServiceEntity[]> {
+    try {
+      return await this.serviceService.findAllByProduct(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('/')
   async findAll(): Promise<ServiceEntity[]> {
     try {

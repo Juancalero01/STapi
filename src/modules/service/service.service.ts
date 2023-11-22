@@ -100,4 +100,18 @@ export class ServiceService {
       throw error;
     }
   }
+
+  async findAllByProduct(id: number): Promise<ServiceEntity[]> {
+    try {
+      return await this.serviceRepository.find({
+        where: {
+          product: {
+            id,
+          },
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
