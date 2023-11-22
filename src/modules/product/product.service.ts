@@ -12,26 +12,9 @@ export class ProductService {
     private readonly productRepository: Repository<ProductEntity>,
   ) {}
 
-  private readonly querySelect: string[] = [
-    'product.id',
-    'product.serial',
-    'product.reference',
-    'product.deliveryDate',
-    'product.isActive',
-    'client.id',
-    'client.taxpayerName',
-    'productType.id',
-    'productType.name',
-  ];
-
   async findAll(): Promise<ProductEntity[]> {
     try {
-      return await this.productRepository
-        .createQueryBuilder('product')
-        .select(this.querySelect)
-        .innerJoin('product.client', 'client')
-        .innerJoin('product.productType', 'productType')
-        .getMany();
+      return await this.productRepository.find();
     } catch (error) {
       throw error;
     }
@@ -39,13 +22,7 @@ export class ProductService {
 
   async findOne(id: number): Promise<ProductEntity> {
     try {
-      return await this.productRepository
-        .createQueryBuilder('product')
-        .select(this.querySelect)
-        .innerJoin('product.client', 'client')
-        .innerJoin('product.productType', 'productType')
-        .where(`product.id = ${id}`)
-        .getOne();
+      return await this.productRepository.findOne({ where: { id } });
     } catch (error) {
       throw error;
     }
@@ -53,13 +30,7 @@ export class ProductService {
 
   async findOneSerial(serial: string): Promise<ProductEntity> {
     try {
-      return await this.productRepository
-        .createQueryBuilder('product')
-        .select(this.querySelect)
-        .innerJoin('product.client', 'client')
-        .innerJoin('product.productType', 'productType')
-        .where(`product.serial = "${serial}"`)
-        .getOne();
+      return await this.productRepository.findOne({ where: { serial } });
     } catch (error) {
       throw error;
     }
