@@ -79,6 +79,8 @@ export class UserService {
   }
 
   async update(id: number, body: UpdateUserDto): Promise<void> {
+    // todo: refactorizar el update, para que actualice los datos, luego otro update
+    // todo: 2__ para que actualice la contraseña solamente. seria del perfil.
     try {
       if (!(await this.findOne(id)))
         throw new HttpException('User not found', 404);
