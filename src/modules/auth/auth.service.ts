@@ -3,6 +3,7 @@ import { LoginDto } from './dto/login.dto';
 import { UserService } from '../user/user.service';
 import { compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from './jwt/jwt.paylod';
 
 @Injectable()
 export class AuthService {
@@ -12,8 +13,7 @@ export class AuthService {
   ) {}
 
   async login(body: LoginDto) {
-    const { username } = body;
-    const user = await this.userService.findOneUsername(username);
+    const user = await this.userService.findOneUsername(body.username);
     if (!user) {
       throw new HttpException('User not found', 404);
     }
@@ -21,14 +21,11 @@ export class AuthService {
     if (!isMatch) {
       throw new HttpException('Invalid credentials', 401);
     }
-    const payload = { fullname: user.fullname, id: user.id };
-    const token = await this.jwtService.sign(payload);
-
-    const data = {
-      user: user,
-      token: token,
-    };
-
-    return data;
+    const token = this.jwtService.sign({
+      id: user.id,
+      fullname: user.fullname,
+      role: user.role.name,
+    } as JwtPayload);
+    return { token: token };
   }
 }
