@@ -16,14 +16,7 @@ export class UserService {
   async findAll(): Promise<UserEntity[]> {
     try {
       return await this.userRepository.find({
-        select: [
-          'id',
-          'username',
-          'email',
-          'fullname',
-          'createdAt',
-          'updatedAt',
-        ],
+        select: ['id', 'username', 'fullname', 'email', 'role'],
       });
     } catch (error) {
       throw error;
@@ -34,14 +27,7 @@ export class UserService {
     try {
       return await this.userRepository.findOne({
         where: { id },
-        select: [
-          'id',
-          'username',
-          'email',
-          'fullname',
-          'createdAt',
-          'updatedAt',
-        ],
+        select: ['id', 'username', 'fullname', 'email', 'role'],
       });
     } catch (error) {
       throw error;
@@ -58,7 +44,9 @@ export class UserService {
 
   async findOneUsername(username: string) {
     try {
-      return await this.userRepository.findOne({ where: { username } });
+      return await this.userRepository.findOne({
+        where: { username },
+      });
     } catch (error) {
       throw error;
     }
@@ -66,31 +54,46 @@ export class UserService {
 
   async create(body: CreateUserDto): Promise<void> {
     try {
-      if (
-        !(await this.findOneEmail(body.email)) ||
-        !(await this.findOneUsername(body.username))
-      ) {
-        const password = await hash(body.password, 10);
-        await this.userRepository.save({ ...body, password });
-      }
+      if (await this.findOneEmail(body.email))
+        throw new HttpException('Email already exists', 409);
+      if (await this.findOneUsername(body.username))
+        throw new HttpException('Username already exists', 409);
+      body.password = await hash(body.password, 10);
+      await this.userRepository.save(body);
     } catch (error) {
       throw error;
     }
   }
 
   async update(id: number, body: UpdateUserDto): Promise<void> {
-    // todo: refactorizar el update, para que actualice los datos, luego otro update
-    // todo: 2__ para que actualice la contraseña solamente. seria del perfil.
     try {
-      if (!(await this.findOne(id)))
+      if (!(await this.findOne(id))) {
         throw new HttpException('User not found', 404);
-      if (await this.findOneEmail(body.email))
-        throw new HttpException('Email already exists', 409);
-      if (await this.findOneUsername(body.username))
-        throw new HttpException('Username already exists', 409);
-      const password = await hash(body.password, 10);
-      body.password = password;
+      }
+      if ((await this.findOneEmail(body.email))?.id !== id) {
+        throw new HttpException(
+          `User with email: ${body.email} already exists`,
+          409,
+        );
+      }
+      if ((await this.findOneUsername(body.username))?.id !== id) {
+        throw new HttpException(
+          `User with username: ${body.username} already exists`,
+          409,
+        );
+      }
       await this.userRepository.update(id, body);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async resetPassword(id: number): Promise<void> {
+    try {
+      const userFound = await this.findOne(id);
+      if (!userFound) throw new HttpException('User not found', 404);
+      userFound.password = await hash(userFound.username, 10);
+      await this.userRepository.update(id, userFound);
     } catch (error) {
       throw error;
     }
