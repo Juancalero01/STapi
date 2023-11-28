@@ -12,9 +12,7 @@ export class ServiceStateService {
 
   async findAll() {
     try {
-      return await this.serviceStateRepository.find({
-        select: ['id', 'name', 'isActive'],
-      });
+      return await this.serviceStateRepository.find();
     } catch (error) {
       throw error;
     }
@@ -24,7 +22,6 @@ export class ServiceStateService {
     try {
       return await this.serviceStateRepository.findOne({
         where: { id },
-        select: ['id', 'name', 'isActive'],
       });
     } catch (error) {
       throw error;
