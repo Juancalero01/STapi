@@ -13,13 +13,16 @@ import { CreateServiceHistoryDto } from './dto/create-service-history.dto';
 import { UpdateServiceHistoryDto } from './dto/update-service-history.dto';
 import { ServiceHistoryEntity } from './service-history.entity';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
+import { RolesGuard } from '../role/common/role.guard';
+import { Roles } from '../role/common/role.decorator';
 
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('service-history')
 export class ServiceHistoryController {
   constructor(private readonly serviceHistoryService: ServiceHistoryService) {}
 
   @Get('/')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll(): Promise<ServiceHistoryEntity[]> {
     try {
       return await this.serviceHistoryService.findAll();
@@ -29,6 +32,7 @@ export class ServiceHistoryController {
   }
 
   @Get('/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ServiceHistoryEntity> {
@@ -38,6 +42,7 @@ export class ServiceHistoryController {
   }
 
   @Post('/')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async create(@Body() body: CreateServiceHistoryDto) {
     try {
       return await this.serviceHistoryService.create(body);
@@ -47,6 +52,7 @@ export class ServiceHistoryController {
   }
 
   @Put('/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateServiceHistoryDto,
@@ -59,6 +65,7 @@ export class ServiceHistoryController {
   }
 
   @Get('s/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findService(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ServiceHistoryEntity[]> {
