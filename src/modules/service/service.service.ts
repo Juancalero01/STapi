@@ -17,6 +17,7 @@ export class ServiceService {
     try {
       return await this.serviceRepository.find({
         where: { state: Not(In([11, 12])) },
+        relations: ['product', 'state', 'priority', 'failureTypes'],
       });
     } catch (error) {
       throw error;
@@ -27,6 +28,7 @@ export class ServiceService {
     try {
       return await this.serviceRepository.findOne({
         where: { id },
+        relations: ['product', 'state', 'priority', 'failureTypes'],
       });
     } catch (error) {
       throw error;
