@@ -14,9 +14,7 @@ export class ServicePriorityService {
 
   async findAll(): Promise<ServicePriorityEntity[]> {
     try {
-      return await this.serviceStateRepository.find({
-        select: ['id', 'name', 'isActive'],
-      });
+      return await this.serviceStateRepository.find({});
     } catch (error) {
       throw error;
     }
@@ -26,7 +24,6 @@ export class ServicePriorityService {
     try {
       return await this.serviceStateRepository.findOne({
         where: { id },
-        select: ['id', 'name', 'isActive'],
       });
     } catch (error) {
       throw error;
