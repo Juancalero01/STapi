@@ -15,7 +15,7 @@ import { Roles } from '../role/common/role.decorator';
 export class ServiceStateController {
   constructor(private readonly serviceStateService: ServiceStateService) {}
   @Get('/')
-  @Roles('ADMINISTRADOR')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll() {
     try {
       return await this.serviceStateService.findAll();
@@ -25,7 +25,7 @@ export class ServiceStateController {
   }
 
   @Get('/:id')
-  @Roles('ADMINISTRADOR')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findOne(@Param('id', ParseIntPipe) id: number) {
     try {
       return await this.serviceStateService.findOne(id);
