@@ -12,6 +12,7 @@ import { FailureTypeModule } from './modules/failure-type/failure-type.module';
 import { ServiceHistoryModule } from './modules/service-history/service-history.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { RoleModule } from './modules/role/role.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { AuthModule } from './modules/auth/auth.module';
     TaxConditionModule,
     FailureTypeModule,
     UserModule,
+    RoleModule,
   ],
 })
 export class AppModule {}
