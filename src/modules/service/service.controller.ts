@@ -14,13 +14,16 @@ import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { ServiceStateEntity } from '../service-state/service-state.entity';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
+import { RolesGuard } from '../role/common/role.guard';
+import { Roles } from '../role/common/role.decorator';
 
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('service')
 export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
   @Get('/r')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findLastReclaim(): Promise<string | null> {
     try {
       return await this.serviceService.findLastReclaim();
@@ -30,6 +33,7 @@ export class ServiceController {
   }
 
   @Get('p/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findAllByProduct(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ServiceEntity[]> {
@@ -41,6 +45,7 @@ export class ServiceController {
   }
 
   @Get('/')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll(): Promise<ServiceEntity[]> {
     try {
       return await this.serviceService.findAll();
@@ -50,6 +55,7 @@ export class ServiceController {
   }
 
   @Get('/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<ServiceEntity> {
     try {
       return await this.serviceService.findOne(id);
@@ -59,6 +65,7 @@ export class ServiceController {
   }
 
   @Post('/')
+  @Roles('ADMINISTRADOR')
   async create(@Body() body: CreateServiceDto): Promise<void> {
     try {
       await this.serviceService.create(body);
@@ -68,6 +75,7 @@ export class ServiceController {
   }
 
   @Put('/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateServiceDto,
