@@ -21,11 +21,15 @@ export class AuthService {
     if (!isMatch) {
       throw new HttpException('Invalid credentials', 401);
     }
-    const token = this.jwtService.sign({
+    const token: string = this.jwtService.sign({
       id: user.id,
       fullname: user.fullname,
       role: user.role.name,
     } as JwtPayload);
-    return { token: token };
+
+    return {
+      user: { id: user.id, fullname: user.fullname, role: user.role.name },
+      token: token,
+    };
   }
 }

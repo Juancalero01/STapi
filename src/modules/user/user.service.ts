@@ -46,6 +46,7 @@ export class UserService {
     try {
       return await this.userRepository.findOne({
         where: { username },
+        select: ['id', 'username', 'fullname', 'email', 'role', 'password'],
       });
     } catch (error) {
       throw error;
