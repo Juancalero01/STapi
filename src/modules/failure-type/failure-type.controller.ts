@@ -13,13 +13,16 @@ import { CreateFailureTypeDto } from './dto/create-failure-type.dto';
 import { UpdateFailureTypeDto } from './dto/update-failure-type.dto';
 import { FailureTypeEntity } from './failure-type.entity';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
+import { RolesGuard } from '../role/common/role.guard';
+import { Roles } from '../role/common/role.decorator';
 
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('failure-type')
 export class FailureTypeController {
   constructor(private readonly failureTypeService: FailureTypeService) {}
 
   @Get('/')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll(): Promise<FailureTypeEntity[]> {
     try {
       return await this.failureTypeService.findAll();
@@ -29,6 +32,7 @@ export class FailureTypeController {
   }
 
   @Get('/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<FailureTypeEntity> {
@@ -40,6 +44,7 @@ export class FailureTypeController {
   }
 
   @Post('/')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async create(@Body() body: CreateFailureTypeDto): Promise<void> {
     try {
       await this.failureTypeService.create(body);
@@ -49,6 +54,7 @@ export class FailureTypeController {
   }
 
   @Put('/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateFailureTypeDto,

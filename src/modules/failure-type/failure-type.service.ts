@@ -15,8 +15,7 @@ export class FailureTypeService {
   async findAll(): Promise<FailureTypeEntity[]> {
     try {
       return await this.failureTypeRepository.find({
-        select: ['id', 'name', 'isActive'],
-        order: { id: 'ASC' },
+        order: { name: 'ASC' },
       });
     } catch (error) {
       throw error;
@@ -27,7 +26,6 @@ export class FailureTypeService {
     try {
       return await this.failureTypeRepository.findOne({
         where: { id },
-        select: ['id', 'name', 'isActive'],
       });
     } catch (error) {
       throw error;
@@ -36,11 +34,6 @@ export class FailureTypeService {
 
   async findIds(ids: FailureTypeEntity[]): Promise<FailureTypeEntity[]> {
     try {
-      console.log(
-        await this.failureTypeRepository.find({
-          where: { id: In(ids) },
-        }),
-      );
       return await this.failureTypeRepository.find({
         where: { id: In(ids) },
       });
