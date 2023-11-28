@@ -14,7 +14,6 @@ export class ProvinceService {
   async findAll(): Promise<ProvinceEntity[]> {
     try {
       return await this.provinceRepository.find({
-        select: ['id', 'name', 'isActive'],
         order: { name: 'ASC' },
       });
     } catch (error) {
@@ -26,7 +25,6 @@ export class ProvinceService {
     try {
       return await this.provinceRepository.findOne({
         where: { id },
-        select: ['id', 'name', 'isActive'],
       });
     } catch (error) {
       throw error;

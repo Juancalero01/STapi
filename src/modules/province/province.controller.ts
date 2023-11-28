@@ -12,13 +12,16 @@ import { ProvinceService } from './province.service';
 import { ProvinceEntity } from './province.entity';
 import { CreateProvinceDto } from './dto/create-province.dto';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
+import { RolesGuard } from '../role/common/role.guard';
+import { Roles } from '../role/common/role.decorator';
 
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('province')
 export class ProvinceController {
   constructor(private readonly provinceService: ProvinceService) {}
 
   @Get('/')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll(): Promise<ProvinceEntity[]> {
     try {
       return await this.provinceService.findAll();
@@ -28,6 +31,7 @@ export class ProvinceController {
   }
 
   @Get('/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ProvinceEntity> {
@@ -39,6 +43,7 @@ export class ProvinceController {
   }
 
   @Post('/')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async create(@Body() body: CreateProvinceDto) {
     try {
       return await this.provinceService.create(body);
@@ -48,6 +53,7 @@ export class ProvinceController {
   }
 
   @Put('/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: CreateProvinceDto,
