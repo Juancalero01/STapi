@@ -13,13 +13,16 @@ import { ProductTypeEntity } from './product-type.entity';
 import { CreateProductTypeDto } from './dto/create-product-type.dto';
 import { UpdateProductTypeDto } from './dto/update-product-type.dto';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
+import { RolesGuard } from '../role/common/role.guard';
+import { Roles } from '../role/common/role.decorator';
 
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('product-type')
 export class ProductTypeController {
   constructor(private readonly productTypeService: ProductTypeService) {}
 
   @Get('/')
+  @Roles('ADMINISTRADOR')
   async findAll(): Promise<ProductTypeEntity[]> {
     try {
       return await this.productTypeService.findAll();
@@ -29,6 +32,7 @@ export class ProductTypeController {
   }
 
   @Get('/:id')
+  @Roles('ADMINISTRADOR')
   async findOne(@Param('id') id: number): Promise<ProductTypeEntity> {
     try {
       return await this.productTypeService.findOne(id);
@@ -38,6 +42,7 @@ export class ProductTypeController {
   }
 
   @Post('/')
+  @Roles('ADMINISTRADOR')
   async create(@Body() body: CreateProductTypeDto): Promise<void> {
     try {
       await this.productTypeService.create(body);
@@ -47,6 +52,7 @@ export class ProductTypeController {
   }
 
   @Put('/:id')
+  @Roles('ADMINISTRADOR')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateProductTypeDto,

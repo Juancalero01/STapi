@@ -14,12 +14,7 @@ export class ProductTypeService {
 
   async findAll(): Promise<ProductTypeEntity[]> {
     try {
-      return (
-        (await this.productTypeRepository.find({
-          select: ['id', 'name', 'prefix', 'isActive'],
-          order: { isActive: 'DESC', prefix: 'ASC' },
-        })) || []
-      );
+      return await this.productTypeRepository.find();
     } catch (error) {
       throw error;
     }
@@ -28,7 +23,6 @@ export class ProductTypeService {
   async findOne(id: number): Promise<ProductTypeEntity> {
     try {
       return await this.productTypeRepository.findOne({
-        select: ['id', 'name', 'prefix', 'isActive'],
         where: { id },
       });
     } catch (error) {
