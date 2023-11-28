@@ -15,7 +15,6 @@ export class TaxConditionService {
   async findAll(): Promise<TaxConditionEntity[]> {
     try {
       return await this.taxConditionRepository.find({
-        select: ['id', 'name', 'isActive'],
         order: { name: 'ASC' },
       });
     } catch (error) {
@@ -26,7 +25,6 @@ export class TaxConditionService {
   async findOne(id: number): Promise<TaxConditionEntity> {
     try {
       return await this.taxConditionRepository.findOne({
-        select: ['id', 'name', 'isActive'],
         where: { id },
       });
     } catch (error) {
