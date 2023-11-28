@@ -13,13 +13,16 @@ import { ClientEntity } from './client.entity';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
+import { RolesGuard } from '../role/common/role.guard';
+import { Roles } from '../role/common/role.decorator';
 
-@UseGuards(JwtGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('client')
 export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Get('/')
+  @Roles('ADMINISTRADOR')
   async findAll(): Promise<ClientEntity[]> {
     try {
       return await this.clientService.findAll();
@@ -29,6 +32,7 @@ export class ClientController {
   }
 
   @Get('/:id')
+  @Roles('ADMINISTRADOR')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<ClientEntity> {
     try {
       return await this.clientService.findOne(id);
@@ -38,6 +42,7 @@ export class ClientController {
   }
 
   @Post('/')
+  @Roles('ADMINISTRADOR')
   async create(@Body() body: CreateClientDto): Promise<void> {
     try {
       await this.clientService.create(body);
@@ -47,6 +52,7 @@ export class ClientController {
   }
 
   @Put('/:id')
+  @Roles('ADMINISTRADOR')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateClientDto: UpdateClientDto,
