@@ -91,10 +91,10 @@ export class ServiceController {
   @Roles('ADMINISTRADOR', 'TECNICO')
   async updateState(
     @Param('id', ParseIntPipe) id: number,
-    @Body() state: ServiceStateEntity,
+    @Body() body: ServiceStateEntity,
   ): Promise<void> {
     try {
-      await this.serviceService.updateState(id, state);
+      await this.serviceService.updateState(id, body);
     } catch (error) {
       throw error;
     }

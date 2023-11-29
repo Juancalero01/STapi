@@ -93,7 +93,9 @@ export class ServiceService {
 
   async updateState(id: number, state: ServiceStateEntity): Promise<void> {
     try {
-      await this.serviceRepository.update(id, state);
+      await this.serviceRepository.update(id, {
+        state,
+      });
     } catch (error) {
       throw error;
     }
