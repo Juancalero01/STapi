@@ -87,7 +87,8 @@ export class ServiceController {
     }
   }
 
-  @Put('s/:id')
+  @Put('/s/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async updateState(
     @Param('id', ParseIntPipe) id: number,
     @Body() state: ServiceStateEntity,

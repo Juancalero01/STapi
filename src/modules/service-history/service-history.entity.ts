@@ -21,6 +21,6 @@ export class ServiceHistoryEntity extends BaseEntity {
   @ManyToOne(() => UserEntity, (user) => user.serviceHistory)
   user: UserEntity;
 
-  @Column({ type: 'date', nullable: false })
+  @Column({ type: 'datetime', nullable: false })
   dateEntry: Date;
 }
