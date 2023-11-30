@@ -56,4 +56,18 @@ export class ServiceHistoryService {
       throw error;
     }
   }
+
+  async findLastDateEntry(id: number): Promise<ServiceHistoryEntity> {
+    try {
+      const serviceHistoryFound = await this.serviceHistoryRepository
+        .createQueryBuilder('service_history')
+        .where('service_history.serviceId = :id', { id })
+        .orderBy('service_history.id', 'DESC')
+        .limit(1)
+        .getOne();
+      return serviceHistoryFound;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

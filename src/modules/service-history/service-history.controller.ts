@@ -75,4 +75,16 @@ export class ServiceHistoryController {
       throw error;
     }
   }
+
+  @Get('r/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async findLastDateEntry(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ServiceHistoryEntity> {
+    try {
+      return await this.serviceHistoryService.findLastDateEntry(id);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
