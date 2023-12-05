@@ -17,10 +17,14 @@ export class AuthService {
     if (!user) {
       throw new HttpException('User not found', 404);
     }
+    if (!user.isActive) {
+      throw new HttpException('User is not active', 403);
+    }
     const isMatch = await compare(body.password, user.password);
     if (!isMatch) {
       throw new HttpException('Invalid credentials', 401);
     }
+
     const token: string = this.jwtService.sign({
       id: user.id,
       fullname: user.fullname,
