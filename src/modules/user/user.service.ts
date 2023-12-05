@@ -16,7 +16,19 @@ export class UserService {
   async findAll(): Promise<UserEntity[]> {
     try {
       return await this.userRepository.find({
-        select: ['id', 'username', 'fullname', 'email', 'role'],
+        select: ['id', 'username', 'fullname', 'email', 'role', 'isActive'],
+        order: { role: { id: 'ASC' }, isActive: 'DESC' },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findAllActives(): Promise<UserEntity[]> {
+    try {
+      return await this.userRepository.find({
+        select: ['id', 'username', 'fullname', 'email', 'role', 'isActive'],
+        where: { isActive: true },
       });
     } catch (error) {
       throw error;
@@ -27,7 +39,7 @@ export class UserService {
     try {
       return await this.userRepository.findOne({
         where: { id },
-        select: ['id', 'username', 'fullname', 'email', 'role'],
+        select: ['id', 'username', 'fullname', 'email', 'role', 'isActive'],
       });
     } catch (error) {
       throw error;
@@ -96,6 +108,17 @@ export class UserService {
       const userFound = await this.userRepository.findOne({ where: { id } });
       if (!userFound) throw new HttpException('User not found', 404);
       userFound.password = await hash(userFound.username, 10);
+      await this.userRepository.update(id, userFound);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async changeState(id: number): Promise<void> {
+    try {
+      const userFound = await this.userRepository.findOne({ where: { id } });
+      if (!userFound) throw new HttpException('User not found', 404);
+      userFound.isActive = !userFound.isActive;
       await this.userRepository.update(id, userFound);
     } catch (error) {
       throw error;

@@ -27,6 +27,12 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('/a')
+  @Roles('ADMINISTRADOR')
+  async findAllActives(): Promise<UserEntity[]> {
+    return this.userService.findAllActives();
+  }
+
   @Get('/:id')
   @Roles('ADMINISTRADOR')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<UserEntity> {
@@ -47,6 +53,12 @@ export class UserController {
   @Roles('ADMINISTRADOR')
   async resetPassword(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.userService.resetPassword(id);
+  }
+
+  @Put('/s/:id')
+  @Roles('ADMINISTRADOR')
+  async changeState(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.userService.changeState(id);
   }
 
   @Put('/:id')
