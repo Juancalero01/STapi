@@ -71,13 +71,15 @@ export class UserService {
       if (!(await this.findOne(id))) {
         throw new HttpException('User not found', 404);
       }
-      if ((await this.findOneEmail(body.email))?.id !== id) {
+      const userWithEmail = await this.findOneEmail(body.email);
+      if (userWithEmail && userWithEmail.id !== id) {
         throw new HttpException(
           `User with email: ${body.email} already exists`,
           409,
         );
       }
-      if ((await this.findOneUsername(body.username))?.id !== id) {
+      const userWithUsername = await this.findOneUsername(body.username);
+      if (userWithUsername && userWithUsername.id !== id) {
         throw new HttpException(
           `User with username: ${body.username} already exists`,
           409,
@@ -91,7 +93,7 @@ export class UserService {
 
   async resetPassword(id: number): Promise<void> {
     try {
-      const userFound = await this.findOne(id);
+      const userFound = await this.userRepository.findOne({ where: { id } });
       if (!userFound) throw new HttpException('User not found', 404);
       userFound.password = await hash(userFound.username, 10);
       await this.userRepository.update(id, userFound);
