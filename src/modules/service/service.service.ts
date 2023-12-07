@@ -15,6 +15,14 @@ export class ServiceService {
 
   async findAll(): Promise<ServiceEntity[]> {
     try {
+      return await this.serviceRepository.find();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findAllActiveServices(): Promise<ServiceEntity[]> {
+    try {
       return await this.serviceRepository.find({
         where: { state: Not(In([11, 12])) },
         relations: ['product', 'state', 'priority', 'failureTypes'],

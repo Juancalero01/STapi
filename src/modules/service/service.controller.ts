@@ -44,11 +44,21 @@ export class ServiceController {
     }
   }
 
-  @Get('/')
+  @Get('/all')
   @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll(): Promise<ServiceEntity[]> {
     try {
       return await this.serviceService.findAll();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('/')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async findAllActiveServices(): Promise<ServiceEntity[]> {
+    try {
+      return await this.serviceService.findAllActiveServices();
     } catch (error) {
       throw error;
     }
