@@ -14,7 +14,7 @@ export class UserEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255, nullable: false, select: false })
   password: string;
 
   @ManyToOne(() => RoleEntity, (role) => role.user, {

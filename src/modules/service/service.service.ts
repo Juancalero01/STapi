@@ -101,6 +101,7 @@ export class ServiceService {
 
   async updateState(id: number, state: ServiceStateEntity): Promise<void> {
     try {
+      console.log(state);
       await this.serviceRepository.update(id, {
         state,
       });

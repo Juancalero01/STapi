@@ -32,10 +32,14 @@ export class ServiceHistoryService {
 
   async findService(id: number): Promise<ServiceHistoryEntity[]> {
     try {
-      return await this.serviceHistoryRepository
-        .createQueryBuilder('service_histories')
-        .where(`serviceId = ${id}`)
-        .getMany();
+      const retoran = await this.serviceHistoryRepository.find({
+        where: {
+          service: { id },
+        },
+        relations: ['service', 'user', 'stateCurrent', 'stateNext'],
+      });
+      console.log(retoran);
+      return retoran;
     } catch (error) {
       throw error;
     }

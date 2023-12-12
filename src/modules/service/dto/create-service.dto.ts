@@ -14,8 +14,6 @@ export class CreateServiceDto {
   remarks: string;
   warranty: boolean;
   securityStrap: boolean;
-
-  // With relations
   product: ProductEntity;
   state: ServiceStateEntity;
   priority: ServicePriorityEntity;
