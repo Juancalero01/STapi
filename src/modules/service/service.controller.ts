@@ -109,4 +109,17 @@ export class ServiceController {
       throw error;
     }
   }
+
+  @Put('/d/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async updateDateDeparture(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: Date,
+  ): Promise<void> {
+    try {
+      await this.serviceService.updateDateDeparture(id, body);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

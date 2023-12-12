@@ -5,6 +5,7 @@ import { ServiceStateEntity } from 'src/modules/service-state/service-state.enti
 
 export class CreateServiceDto {
   dateEntry: Date;
+  dateDeparture: Date;
   reclaim: string;
   startReference: string;
   endReference: string;

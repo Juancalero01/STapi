@@ -13,11 +13,13 @@ import { ServicePriorityEntity } from '../service-priority/service-priority.enti
 import { FailureTypeEntity } from '../failure-type/failure-type.entity';
 import { ServiceHistoryEntity } from '../service-history/service-history.entity';
 
-//! EN FASE DE PRUEBA EL SERVICIO, SE REQUIERE MAS TESTING POR POSIBLES FALLAS DE IMPLEMENTACION EN EL FRONTEND
 @Entity('services')
 export class ServiceEntity extends BaseEntity {
   @Column({ type: 'datetime', nullable: false })
   dateEntry: Date;
+
+  @Column({ type: 'datetime', nullable: true })
+  dateDeparture: Date;
 
   @Column({ type: 'varchar', nullable: false })
   reclaim: string;

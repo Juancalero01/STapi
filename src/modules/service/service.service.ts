@@ -101,9 +101,18 @@ export class ServiceService {
 
   async updateState(id: number, state: ServiceStateEntity): Promise<void> {
     try {
-      console.log(state);
       await this.serviceRepository.update(id, {
         state,
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateDateDeparture(id: number, dateDeparture: Date): Promise<void> {
+    try {
+      await this.serviceRepository.update(id, {
+        dateDeparture: new Date().toISOString().slice(0, 19).replace('T', ' '),
       });
     } catch (error) {
       throw error;
