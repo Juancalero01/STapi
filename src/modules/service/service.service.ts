@@ -15,7 +15,9 @@ export class ServiceService {
 
   async findAll(): Promise<ServiceEntity[]> {
     try {
-      return await this.serviceRepository.find();
+      return await this.serviceRepository.find({
+        relations: ['product', 'state', 'priority', 'failureTypes'],
+      });
     } catch (error) {
       throw error;
     }
