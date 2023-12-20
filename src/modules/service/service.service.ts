@@ -5,6 +5,7 @@ import { In, Not, Repository } from 'typeorm';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { ServiceStateEntity } from '../service-state/service-state.entity';
+import { ServiceHistoryEntity } from '../service-history/service-history.entity';
 
 @Injectable()
 export class ServiceService {
@@ -29,6 +30,58 @@ export class ServiceService {
         where: { state: Not(In([11, 12])) },
         relations: ['product', 'state', 'priority', 'failureTypes'],
       });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findAllWithOutCancel(): Promise<number> {
+    try {
+      const services = await this.serviceRepository.find({
+        where: { state: Not(12) },
+        relations: ['product', 'state', 'priority', 'failureTypes'],
+      });
+      return services.length;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findAllWithRepair(): Promise<number> {
+    try {
+      const repairStateId = 8;
+
+      const services = await this.serviceRepository
+        .createQueryBuilder('service')
+        .innerJoinAndSelect(
+          'service_histories',
+          'history',
+          'service.id = history.serviceId',
+        )
+        .where('history.stateCurrentId = :repairStateId', { repairStateId })
+        .getMany();
+      return services.length;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findAllWithOutRepair(): Promise<number> {
+    try {
+      const withOutRepairStateId = 7;
+
+      const services = await this.serviceRepository
+        .createQueryBuilder('service')
+        .innerJoinAndSelect(
+          'service_histories',
+          'history',
+          'service.id = history.serviceId',
+        )
+        .where('history.stateCurrentId = :withOutRepairStateId', {
+          withOutRepairStateId,
+        })
+        .getMany();
+      return services.length;
     } catch (error) {
       throw error;
     }

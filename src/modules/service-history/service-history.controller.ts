@@ -31,6 +31,16 @@ export class ServiceHistoryController {
     }
   }
 
+  @Get('/act')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async findActivities(): Promise<ServiceHistoryEntity[]> {
+    try {
+      return await this.serviceHistoryService.findActivities();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('/:id')
   @Roles('ADMINISTRADOR', 'TECNICO')
   async findOne(

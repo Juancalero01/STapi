@@ -3,7 +3,7 @@ import { CreateServiceHistoryDto } from './dto/create-service-history.dto';
 import { UpdateServiceHistoryDto } from './dto/update-service-history.dto';
 import { ServiceHistoryEntity } from './service-history.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 
 @Injectable()
 export class ServiceHistoryService {
@@ -68,6 +68,27 @@ export class ServiceHistoryService {
         .limit(1)
         .getOne();
       return serviceHistoryFound;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findActivities(): Promise<ServiceHistoryEntity[]> {
+    try {
+      const currentDate = new Date();
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+      const activities = await this.serviceHistoryRepository.find({
+        where: {
+          dateEntry: Between(oneWeekAgo, currentDate),
+        },
+        order: {
+          dateEntry: 'DESC',
+        },
+        relations: ['service', 'user', 'stateCurrent', 'stateNext'],
+      });
+      return activities;
     } catch (error) {
       throw error;
     }

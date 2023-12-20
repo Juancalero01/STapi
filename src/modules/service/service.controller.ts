@@ -64,6 +64,36 @@ export class ServiceController {
     }
   }
 
+  @Get('/allwoc')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async findAllWithOutCancel(): Promise<number> {
+    try {
+      return await this.serviceService.findAllWithOutCancel();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('/allwor')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async findAllWithOutRepair(): Promise<number> {
+    try {
+      return await this.serviceService.findAllWithOutRepair();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('/allwr')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async findAllWithRepair(): Promise<number> {
+    try {
+      return await this.serviceService.findAllWithRepair();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('/:id')
   @Roles('ADMINISTRADOR', 'TECNICO')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<ServiceEntity> {
