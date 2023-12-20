@@ -18,6 +18,9 @@ export class ServiceService {
     try {
       return await this.serviceRepository.find({
         relations: ['product', 'state', 'priority', 'failureTypes'],
+        order: {
+          dateEntry: 'DESC',
+        },
       });
     } catch (error) {
       throw error;
