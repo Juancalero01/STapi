@@ -6,10 +6,14 @@ import { UserEntity } from '../user/user.entity';
 
 @Entity('service_histories')
 export class ServiceHistoryEntity extends BaseEntity {
-  @ManyToOne(() => ServiceStateEntity, (state) => state.currentServiceHistory)
+  @ManyToOne(() => ServiceStateEntity, (state) => state.currentServiceHistory, {
+    eager: true,
+  })
   stateCurrent: ServiceStateEntity;
 
-  @ManyToOne(() => ServiceStateEntity, (state) => state.nextServiceHistory)
+  @ManyToOne(() => ServiceStateEntity, (state) => state.nextServiceHistory, {
+    eager: true,
+  })
   stateNext: ServiceStateEntity;
 
   @Column({ type: 'varchar', length: 500, nullable: false })
