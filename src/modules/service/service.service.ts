@@ -1,7 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiceEntity } from './service.entity';
-import { In, Not, Repository } from 'typeorm';
+import { Between, In, Not, Repository } from 'typeorm';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { ServiceStateEntity } from '../service-state/service-state.entity';
@@ -185,6 +185,49 @@ export class ServiceService {
             id,
           },
         },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // service indicators
+  // 1. Script de busqueda entre todos menos los servicios cancelados entre las fechas desde hasta
+  //
+
+  async getServiceIndicators(body: any): Promise<any> {
+    try {
+      if (body.productTypeId === null) {
+        const services = await this.performAdditionalFiltering(
+          body.dateFrom,
+          body.dateUntil,
+        );
+
+        const numberOfServices = services.length;
+        // define reingresos
+        // define el tiempo estimado
+        // define el tiempo de estancia de los productos o producto
+
+        // !IMPORTANTE: esto corresponde solamente cuando es a nivel general, pero se puede agregar a nivel tipo de producto.
+
+        return {
+          numberOfServices,
+        };
+      }
+    } catch (error) {}
+  }
+
+  async performAdditionalFiltering(
+    dateFrom: Date,
+    dateUntil: Date,
+  ): Promise<any> {
+    try {
+      return await this.serviceRepository.find({
+        where: {
+          dateEntry: Between(new Date(dateFrom), new Date(dateUntil)),
+          state: Not(12),
+        },
+        relations: ['serviceHistory', 'failureTypes'],
       });
     } catch (error) {
       throw error;

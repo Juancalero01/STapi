@@ -32,6 +32,16 @@ export class ServiceController {
     }
   }
 
+  @Get('/i')
+  @Roles('ADMINISTRADOR')
+  async getServiceIndicators(@Body() body: any): Promise<any> {
+    try {
+      return await this.serviceService.getServiceIndicators(body);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('p/:id')
   @Roles('ADMINISTRADOR', 'TECNICO')
   async findAllByProduct(
