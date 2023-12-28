@@ -73,6 +73,9 @@ export class ServiceEntity extends BaseEntity {
   @Column({ type: 'boolean', nullable: true, default: false })
   warranty: boolean;
 
+  @Column({ type: 'integer', nullable: true })
+  repairedTime: number;
+
   @OneToMany(
     () => ServiceHistoryEntity,
     (serviceHistory) => serviceHistory.service,

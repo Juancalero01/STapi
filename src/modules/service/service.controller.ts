@@ -74,6 +74,7 @@ export class ServiceController {
     }
   }
 
+  //! VERIFICAR ESTOS ALL capaz se modifique para que retorne solamente una peiticion, para evitar varias peticiones a la vez.- allwoc allwor allwr
   @Get('/allwoc')
   @Roles('ADMINISTRADOR', 'TECNICO')
   async findAllWithOutCancel(): Promise<number> {
@@ -118,7 +119,7 @@ export class ServiceController {
   @Roles('ADMINISTRADOR')
   async create(@Body() body: CreateServiceDto): Promise<void> {
     try {
-      await this.serviceService.create(body);
+      return await this.serviceService.create(body);
     } catch (error) {
       throw error;
     }
@@ -131,7 +132,7 @@ export class ServiceController {
     @Body() body: UpdateServiceDto,
   ): Promise<void> {
     try {
-      await this.serviceService.update(id, body);
+      return await this.serviceService.update(id, body);
     } catch (error) {
       throw error;
     }
@@ -144,7 +145,7 @@ export class ServiceController {
     @Body() body: ServiceStateEntity,
   ): Promise<void> {
     try {
-      await this.serviceService.updateState(id, body);
+      return await this.serviceService.updateState(id, body);
     } catch (error) {
       throw error;
     }
@@ -152,12 +153,25 @@ export class ServiceController {
 
   @Put('/d/:id')
   @Roles('ADMINISTRADOR', 'TECNICO')
-  async updateDateDeparture(
+  async setDateDeparture(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: Date,
+    @Body('dateDeparture') dateDeparture: Date,
   ): Promise<void> {
     try {
-      await this.serviceService.updateDateDeparture(id, body);
+      return await this.serviceService.setDateDeparture(id, dateDeparture);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Put('/rt/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async setRepairedTime(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('repairedTime') repairedTime: number,
+  ): Promise<void> {
+    try {
+      return await this.serviceService.setRepairedTime(id, repairedTime);
     } catch (error) {
       throw error;
     }

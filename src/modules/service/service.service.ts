@@ -5,7 +5,6 @@ import { Between, In, Not, Repository } from 'typeorm';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { ServiceStateEntity } from '../service-state/service-state.entity';
-import { ServiceHistoryEntity } from '../service-history/service-history.entity';
 
 @Injectable()
 export class ServiceService {
@@ -167,10 +166,23 @@ export class ServiceService {
     }
   }
 
-  async updateDateDeparture(id: number, dateDeparture: Date): Promise<void> {
+  async setDateDeparture(id: number, dateDeparture: Date): Promise<void> {
     try {
       await this.serviceRepository.update(id, {
-        dateDeparture: new Date().toISOString().slice(0, 19).replace('T', ' '),
+        dateDeparture: new Date(dateDeparture)
+          .toISOString()
+          .slice(0, 19)
+          .replace('T', ' '),
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async setRepairedTime(id: number, repairedTime: number): Promise<void> {
+    try {
+      await this.serviceRepository.update(id, {
+        repairedTime: repairedTime,
       });
     } catch (error) {
       throw error;
@@ -199,108 +211,18 @@ export class ServiceService {
           body.dateUntil,
         );
 
-        const result = this.getRepairServices(services).map((service) => {
-          const serviceHistory = service.serviceHistory;
-          const totalHoursByState = {};
-
-          // Utilizar reduce para sumar los milisegundos
-          serviceHistory.reduce((prevHistory, currentHistory) => {
-            const currentTimestamp = currentHistory.dateEntry.getTime();
-            const prevTimestamp = prevHistory.dateEntry.getTime();
-            const timeDifference = currentTimestamp - prevTimestamp;
-
-            !totalHoursByState[currentHistory.stateCurrent.id]
-              ? (totalHoursByState[currentHistory.stateCurrent.id] =
-                  timeDifference)
-              : (totalHoursByState[currentHistory.stateCurrent.id] +=
-                  timeDifference);
-
-            return currentHistory;
-          }, serviceHistory[0]);
-
-          const totalHoursRepair =
-            (totalHoursByState[6] || 0) - (totalHoursByState[8] || 0);
-
-          const formatTime = (timeMillis) => {
-            const days = Math.floor(timeMillis / (24 * 60 * 60 * 1000));
-            const hours = Math.floor(
-              (timeMillis % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000),
-            );
-            const minutes = Math.floor(
-              (timeMillis % (60 * 60 * 1000)) / (60 * 1000),
-            );
-
-            if (days > 0) {
-              return `${days} día(s) ${hours} hora(s)`;
-            } else if (hours > 0) {
-              return `${hours} hora(s) ${minutes} minuto(s)`;
-            } else {
-              return `${minutes} minuto(s)`;
-            }
-          };
-
-          // Imprimir el resultado
-          console.log(formatTime(totalHoursRepair));
-          //!TODO FIJAR ESTE DE ABAJO QUE FUNCIONA MAS O MENOS PERO FUNCIONA
-          //!TODO  HAY QUE HACER PEQUEÑAS FUNCIONALIDADES QUE CADA UNA HAGA COSAS
-          //!TODO POR ULTIMO MODIFICAR LOS RESULTADOS QUE TRAEN EN LA api.
-
-          // let totalHoursRepair = 0;
-          // serviceHistory.forEach((history) => {
-          //   const timestamp = history.dateEntry.getTime();
-          //   console.log(timestamp);
-          //   !totalHoursByState[history.stateCurrent.id]
-          //     ? (totalHoursByState[history.stateCurrent.id] = timestamp)
-          //     : (totalHoursByState[history.stateCurrent.id] += timestamp);
-          //   // const hour = history.dateEntry.getHours();
-          //   // const minutes = history.dateEntry.getMinutes();
-          //   // const timeInMinutes = hour * 60 + minutes;
-          //   // !totalHoursByState[history.stateCurrent.id]
-          //   //   ? (totalHoursByState[history.stateCurrent.id] = timeInMinutes)
-          //   //   : (totalHoursByState[history.stateCurrent.id] += timeInMinutes);
-          //   // totalHoursRepair = totalHoursByState[6] - totalHoursByState[8] || 0;
-          // });
-          // totalHoursRepair =
-          //   (totalHoursByState[6] || 0) - (totalHoursByState[8] || 0);
-          // const formatTime = (totalMinutes) => {
-          //   const hours = Math.floor(totalMinutes / 60);
-          //   const minutes = totalMinutes % 60;
-          //   return `${hours}:${minutes}`;
-          // };
-
-          // const formatTime2 = (totalMinutes) => {
-          //   const days = Math.floor(totalMinutes / (60 * 24));
-          //   const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
-          //   const minutes = totalMinutes % 60;
-
-          //   if (days > 0) {
-          //     return `${days} día(s) ${hours} hora(s)`;
-          //   } else if (hours > 0) {
-          //     return `${hours} hora(s) ${minutes} minuto(s)`;
-          //   } else {
-          //     return `${minutes} minuto(s)`;
-          //   }
-          // };
-
-          return {
-            serviceReclaim: service.reclaim,
-            serviceProduct: service.product.serial,
-            inRepair: formatTime(totalHoursByState[6] || 0),
-            repair: formatTime(totalHoursByState[8] || 0),
-            totalHoursRepair: formatTime(totalHoursRepair),
-          };
-        });
-
         return {
           numberOfServices: this.getnumberOfServices(services),
           reentryServices: this.getReentryServices(services),
           repairServices: this.getRepairServices(services).length,
-          hoursServices: result,
+          // hora de servicio dentro de los servicios reparados
         };
       }
     } catch (error) {}
   }
 
+  // filter
+  // Modificated: optional params* productID
   async performAdditionalFiltering(
     dateFrom: Date,
     dateUntil: Date,
@@ -318,7 +240,7 @@ export class ServiceService {
     }
   }
 
-  //todo: fns to indicators
+  // SERVICES INDICATORS optionals
   private getnumberOfServices(services: ServiceEntity[]) {
     return services.length;
   }
