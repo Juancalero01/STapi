@@ -205,28 +205,28 @@ export class ServiceService {
 
   async getServiceIndicators(body: any): Promise<any> {
     try {
+      let services: ServiceEntity[] = [];
       if (body.productTypeId === null) {
-        const services: ServiceEntity[] = await this.performAdditionalFiltering(
+        services = await this.allfilterServices(body.dateFrom, body.dateUntil);
+      } else {
+        services = await this.allfilterServicesWithProductType(
           body.dateFrom,
           body.dateUntil,
+          body.productTypeId,
         );
-
-        return {
-          numberOfServices: this.getnumberOfServices(services),
-          reentryServices: this.getReentryServices(services),
-          repairServices: this.getRepairServices(services).length,
-          repairTime: this.getRepairedTime(services),
-          repairTimeOfStay: this.getStayInformation(services),
-          failureServices: this.getFailureTypes(services),
-        };
       }
+      return {
+        numberOfServices: this.getnumberOfServices(services),
+        reentryServices: this.getReentryServices(services),
+        repairServices: this.getRepairServices(services).length,
+        repairTime: this.getRepairedTime(services),
+        repairTimeOfStay: this.getStayInformation(services),
+        failureServices: this.getFailureTypes(services),
+      };
     } catch (error) {}
   }
 
-  async performAdditionalFiltering(
-    dateFrom: Date,
-    dateUntil: Date,
-  ): Promise<any> {
+  async allfilterServices(dateFrom: Date, dateUntil: Date): Promise<any> {
     try {
       return await this.serviceRepository.find({
         where: {
@@ -234,6 +234,29 @@ export class ServiceService {
           state: Not(12),
         },
         relations: ['serviceHistory', 'failureTypes'],
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async allfilterServicesWithProductType(
+    dateFrom: Date,
+    dateUntil: Date,
+    productTypeId: number,
+  ): Promise<any> {
+    try {
+      return await this.serviceRepository.find({
+        where: {
+          dateEntry: Between(new Date(dateFrom), new Date(dateUntil)),
+          state: Not(12),
+          product: {
+            productType: {
+              id: productTypeId,
+            },
+          },
+        },
+        relations: ['serviceHistory', 'failureTypes', 'product'],
       });
     } catch (error) {
       throw error;
