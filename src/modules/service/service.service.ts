@@ -17,6 +17,7 @@ export class ServiceService {
     try {
       return await this.serviceRepository.find({
         relations: ['product', 'state', 'priority', 'failureTypes'],
+        where: { state: Not(12) },
         order: {
           dateEntry: 'DESC',
         },
