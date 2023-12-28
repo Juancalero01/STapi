@@ -32,7 +32,7 @@ export class ServiceController {
     }
   }
 
-  @Get('/i')
+  @Post('/i')
   @Roles('ADMINISTRADOR')
   async getServiceIndicators(@Body() body: any): Promise<any> {
     try {

@@ -217,14 +217,12 @@ export class ServiceService {
           repairServices: this.getRepairServices(services).length,
           repairTime: this.getRepairedTime(services),
           repairTimeOfStay: this.getStayInformation(services),
-          // hora de servicio dentro de los servicios reparados
+          failureServices: this.getFailureTypes(services),
         };
       }
     } catch (error) {}
   }
 
-  // filter
-  // Modificated: optional params* productID
   async performAdditionalFiltering(
     dateFrom: Date,
     dateUntil: Date,
@@ -242,7 +240,6 @@ export class ServiceService {
     }
   }
 
-  // SERVICES INDICATORS optionals
   // !VERIFICAR MEDIANTE SI NO HAY SERVICIOS.LENGHT === 0
   private getnumberOfServices(services: ServiceEntity[]) {
     return services.length;
@@ -284,41 +281,52 @@ export class ServiceService {
     };
   }
 
-  private calculateTimeOfStay(service: ServiceEntity): number {
-    const dateEntry = new Date(service.dateEntry);
-    const dateDeparture = new Date(service.dateDeparture);
-
-    // Calcular la diferencia en milisegundos
-    const timeDifference = dateDeparture.getTime() - dateEntry.getTime();
-
-    // Convertir la diferencia a días
-    const daysOfStay = timeDifference / (1000 * 60 * 60 * 24);
-
-    // Redondear hacia abajo para obtener un número entero
-    return Math.floor(daysOfStay);
-  }
-
   private getStayInformation(services: ServiceEntity[]): {} {
     const totalServices = services.length;
-
     if (totalServices === 0) {
-      // Manejar el caso donde no hay servicios
       return {
         totalDays: 0,
         averageDays: 0,
       };
     }
-
     const totalDays = services.reduce(
       (acc, service) => acc + this.calculateTimeOfStay(service),
       0,
     );
-
     const averageDays = Math.round(totalDays / totalServices);
-
     return {
       totalDays: totalDays,
       averageDays: averageDays,
     };
+  }
+
+  private calculateTimeOfStay(service: ServiceEntity): number {
+    const dateEntry = new Date(service.dateEntry);
+    const dateDeparture = new Date(service.dateDeparture);
+    const timeDifference = dateDeparture.getTime() - dateEntry.getTime();
+    const daysOfStay = timeDifference / (1000 * 60 * 60 * 24);
+    return Math.floor(daysOfStay);
+  }
+
+  private getFailureTypes(
+    services: ServiceEntity[],
+  ): { failure: string; percentage: number }[] {
+    const failureTypesMap = new Map<string, number>();
+    const allFailures = services.flatMap(
+      (service) => service.failureTypes || [],
+    );
+    allFailures.forEach((failureType) => {
+      failureTypesMap.set(
+        failureType.name,
+        (failureTypesMap.get(failureType.name) || 0) + 1,
+      );
+    });
+    const failureTypes = Array.from(failureTypesMap.entries()).map(
+      ([name, count]) => ({
+        failure: name,
+        percentage: Math.round((count / allFailures.length) * 100),
+      }),
+    );
+    return failureTypes;
   }
 }
