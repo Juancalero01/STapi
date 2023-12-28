@@ -215,6 +215,8 @@ export class ServiceService {
           numberOfServices: this.getnumberOfServices(services),
           reentryServices: this.getReentryServices(services),
           repairServices: this.getRepairServices(services).length,
+          repairTime: this.getRepairedTime(services),
+          repairTimeOfStay: this.getStayInformation(services),
           // hora de servicio dentro de los servicios reparados
         };
       }
@@ -241,6 +243,7 @@ export class ServiceService {
   }
 
   // SERVICES INDICATORS optionals
+  // !VERIFICAR MEDIANTE SI NO HAY SERVICIOS.LENGHT === 0
   private getnumberOfServices(services: ServiceEntity[]) {
     return services.length;
   }
@@ -259,5 +262,63 @@ export class ServiceService {
           history.stateCurrent.id === 6 || history.stateCurrent.id === 8,
       ),
     );
+  }
+
+  private getRepairedTime(services: ServiceEntity[]): {} {
+    const totalServices = services.length;
+    if (totalServices === 0) {
+      return {
+        totalHours: 0,
+        averageHours: 0,
+      };
+    }
+    const totalHours = services.reduce(
+      (acc, service) => acc + service.repairedTime,
+      0,
+    );
+    const averageHours = Math.round(totalHours / totalServices);
+
+    return {
+      totalHours: totalHours,
+      averageHours: averageHours,
+    };
+  }
+
+  private calculateTimeOfStay(service: ServiceEntity): number {
+    const dateEntry = new Date(service.dateEntry);
+    const dateDeparture = new Date(service.dateDeparture);
+
+    // Calcular la diferencia en milisegundos
+    const timeDifference = dateDeparture.getTime() - dateEntry.getTime();
+
+    // Convertir la diferencia a días
+    const daysOfStay = timeDifference / (1000 * 60 * 60 * 24);
+
+    // Redondear hacia abajo para obtener un número entero
+    return Math.floor(daysOfStay);
+  }
+
+  private getStayInformation(services: ServiceEntity[]): {} {
+    const totalServices = services.length;
+
+    if (totalServices === 0) {
+      // Manejar el caso donde no hay servicios
+      return {
+        totalDays: 0,
+        averageDays: 0,
+      };
+    }
+
+    const totalDays = services.reduce(
+      (acc, service) => acc + this.calculateTimeOfStay(service),
+      0,
+    );
+
+    const averageDays = Math.round(totalDays / totalServices);
+
+    return {
+      totalDays: totalDays,
+      averageDays: averageDays,
+    };
   }
 }
