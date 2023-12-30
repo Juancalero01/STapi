@@ -33,7 +33,7 @@ export class ClientEntity extends BaseEntity {
   taxpayerEmail: string;
 
   @Column({
-    type: 'char',
+    type: 'varchar',
     length: 20,
     nullable: true,
     default: null,
@@ -74,7 +74,7 @@ export class ClientEntity extends BaseEntity {
   contactEmail: string;
 
   @Column({
-    type: 'char',
+    type: 'varchar',
     length: 20,
     nullable: true,
     default: null,
