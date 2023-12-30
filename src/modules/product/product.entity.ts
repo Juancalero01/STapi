@@ -16,11 +16,17 @@ export class ProductEntity extends BaseEntity {
   deliveryDate: Date;
 
   @ManyToOne(() => ProductTypeEntity, (productType) => productType.products, {
+    nullable: false,
+    cascade: true,
     eager: true,
   })
   productType: ProductTypeEntity;
 
-  @ManyToOne(() => ClientEntity, (client) => client.products, { eager: true })
+  @ManyToOne(() => ClientEntity, (client) => client.products, {
+    nullable: false,
+    cascade: true,
+    eager: true,
+  })
   client: ClientEntity;
 
   @OneToMany(() => ServiceEntity, (service) => service.product)

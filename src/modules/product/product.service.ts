@@ -14,7 +14,13 @@ export class ProductService {
 
   async findAll(): Promise<ProductEntity[]> {
     try {
-      return await this.productRepository.find();
+      return await this.productRepository.find({
+        order: {
+          productType: {
+            id: 'ASC',
+          },
+        },
+      });
     } catch (error) {
       throw error;
     }
