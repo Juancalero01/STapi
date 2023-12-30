@@ -45,7 +45,7 @@ export class ClientController {
   @Roles('ADMINISTRADOR')
   async create(@Body() body: CreateClientDto): Promise<void> {
     try {
-      await this.clientService.create(body);
+      return await this.clientService.create(body);
     } catch (error) {
       throw error;
     }
@@ -58,7 +58,7 @@ export class ClientController {
     @Body() updateClientDto: UpdateClientDto,
   ): Promise<void> {
     try {
-      await this.clientService.update(id, updateClientDto);
+      return await this.clientService.update(id, updateClientDto);
     } catch (error) {
       throw error;
     }
