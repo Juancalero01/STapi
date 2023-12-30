@@ -13,9 +13,57 @@ export class ClientEntity extends BaseEntity {
     type: 'varchar',
     length: 13,
     nullable: true,
-    default: null,
   })
   taxpayerId: string;
+
+  @Column({
+    type: 'varchar',
+    length: 120,
+    nullable: true,
+  })
+  taxpayerEmail: string;
+
+  @Column({
+    type: 'varchar',
+    length: 20,
+    nullable: true,
+  })
+  taxpayerPhone: string;
+
+  @Column({ type: 'varchar', length: 150, nullable: true })
+  street: string;
+
+  @Column({ type: 'varchar', length: 120, nullable: true })
+  number: string;
+
+  @Column({ type: 'varchar', length: 120, nullable: true })
+  floor: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  office: string;
+
+  @Column({ type: 'varchar', length: 8, nullable: true })
+  postalCode: string;
+
+  @Column({ type: 'varchar', length: 120, nullable: true })
+  contactName: string;
+
+  @Column({
+    type: 'varchar',
+    length: 120,
+    nullable: true,
+  })
+  contactEmail: string;
+
+  @Column({
+    type: 'varchar',
+    length: 20,
+    nullable: true,
+  })
+  contactPhone: string;
+
+  @Column({ type: 'varchar', length: 250, nullable: true })
+  comment: string;
 
   @ManyToOne(() => TaxConditionEntity, (taxCondition) => taxCondition.clients, {
     nullable: true,
@@ -24,65 +72,12 @@ export class ClientEntity extends BaseEntity {
   })
   taxCondition: TaxConditionEntity;
 
-  @Column({
-    type: 'varchar',
-    length: 120,
-    nullable: true,
-    default: null,
-  })
-  taxpayerEmail: string;
-
-  @Column({
-    type: 'varchar',
-    length: 20,
-    nullable: true,
-    default: null,
-  })
-  taxpayerPhone: string;
-
   @ManyToOne(() => ProvinceEntity, (province) => province.clients, {
     nullable: true,
     cascade: true,
     eager: true,
   })
   province: ProvinceEntity;
-
-  @Column({ type: 'varchar', length: 150, nullable: true, default: null })
-  street: string;
-
-  @Column({ type: 'varchar', length: 120, nullable: true, default: null })
-  number: string;
-
-  @Column({ type: 'varchar', length: 120, nullable: true, default: null })
-  floor: string;
-
-  @Column({ type: 'varchar', length: 50, nullable: true, default: null })
-  office: string;
-
-  @Column({ type: 'varchar', length: 8, nullable: true, default: null })
-  postalCode: string;
-
-  @Column({ type: 'varchar', length: 120, nullable: true, default: null })
-  contactName: string;
-
-  @Column({
-    type: 'varchar',
-    length: 120,
-    nullable: true,
-    default: null,
-  })
-  contactEmail: string;
-
-  @Column({
-    type: 'varchar',
-    length: 20,
-    nullable: true,
-    default: null,
-  })
-  contactPhone: string;
-
-  @Column({ type: 'varchar', length: 250, nullable: true, default: null })
-  comment: string;
 
   @OneToMany(() => ProductEntity, (product) => product.client)
   products: ProductEntity[];
