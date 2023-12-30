@@ -14,7 +14,11 @@ export class ProductTypeService {
 
   async findAll(): Promise<ProductTypeEntity[]> {
     try {
-      return await this.productTypeRepository.find();
+      return await this.productTypeRepository.find({
+        order: {
+          prefix: 'ASC',
+        },
+      });
     } catch (error) {
       throw error;
     }

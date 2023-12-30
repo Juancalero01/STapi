@@ -14,7 +14,11 @@ export class ClientService {
 
   async findAll(): Promise<ClientEntity[]> {
     try {
-      return await this.clientRepository.find();
+      return await this.clientRepository.find({
+        order: {
+          taxpayerName: 'ASC',
+        },
+      });
     } catch (error) {
       throw error;
     }
