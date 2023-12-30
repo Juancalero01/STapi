@@ -10,7 +10,7 @@ export class ProductTypeEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 4, nullable: true })
   prefix: string;
 
-  @Column({ type: 'varchar', length: 250, nullable: true, default: null })
+  @Column({ type: 'varchar', length: 250, nullable: true })
   description: string;
 
   @OneToMany(() => ProductEntity, (product) => product.productType)

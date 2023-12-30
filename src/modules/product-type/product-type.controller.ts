@@ -45,7 +45,7 @@ export class ProductTypeController {
   @Roles('ADMINISTRADOR')
   async create(@Body() body: CreateProductTypeDto): Promise<void> {
     try {
-      await this.productTypeService.create(body);
+      return await this.productTypeService.create(body);
     } catch (error) {
       throw error;
     }
@@ -58,7 +58,7 @@ export class ProductTypeController {
     @Body() body: UpdateProductTypeDto,
   ): Promise<void> {
     try {
-      await this.productTypeService.update(id, body);
+      return await this.productTypeService.update(id, body);
     } catch (error) {
       throw error;
     }
