@@ -47,7 +47,7 @@ export class FailureTypeController {
   @Roles('ADMINISTRADOR', 'TECNICO')
   async create(@Body() body: CreateFailureTypeDto): Promise<void> {
     try {
-      await this.failureTypeService.create(body);
+      return await this.failureTypeService.create(body);
     } catch (error) {
       throw error;
     }
@@ -60,7 +60,7 @@ export class FailureTypeController {
     @Body() body: UpdateFailureTypeDto,
   ): Promise<void> {
     try {
-      await this.failureTypeService.update(id, body);
+      return await this.failureTypeService.update(id, body);
     } catch (error) {
       throw error;
     }
