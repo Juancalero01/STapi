@@ -43,7 +43,7 @@ export class UserController {
   @Roles('ADMINISTRADOR')
   async create(@Body() body: CreateUserDto): Promise<void> {
     try {
-      await this.userService.create(body);
+      return await this.userService.create(body);
     } catch (error) {
       throw error;
     }

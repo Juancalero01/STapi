@@ -18,6 +18,8 @@ export class UserEntity extends BaseEntity {
   password: string;
 
   @ManyToOne(() => RoleEntity, (role) => role.user, {
+    nullable: false,
+    cascade: true,
     eager: true,
   })
   role: RoleEntity;
