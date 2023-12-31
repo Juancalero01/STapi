@@ -22,7 +22,9 @@ export class ServiceHistoryEntity extends BaseEntity {
   @ManyToOne(() => ServiceEntity, (service) => service.serviceHistory)
   service: ServiceEntity;
 
-  @ManyToOne(() => UserEntity, (user) => user.serviceHistory)
+  @ManyToOne(() => UserEntity, (user) => user.serviceHistory, {
+    eager: true,
+  })
   user: UserEntity;
 
   @Column({ type: 'datetime', nullable: false })

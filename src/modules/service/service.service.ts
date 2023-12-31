@@ -16,7 +16,13 @@ export class ServiceService {
   async findAll(): Promise<ServiceEntity[]> {
     try {
       return await this.serviceRepository.find({
-        relations: ['product', 'state', 'priority', 'failureTypes'],
+        relations: [
+          'product',
+          'state',
+          'priority',
+          'failureTypes',
+          'serviceHistory',
+        ],
         where: { state: Not(12) },
         order: {
           dateEntry: 'DESC',
