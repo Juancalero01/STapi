@@ -210,28 +210,57 @@ export class ServiceService {
     }
   }
 
+  // async getServiceIndicators(body: any): Promise<any> {
+  //   try {
+  //     let services: ServiceEntity[] = [];
+  //     if (body.productTypeId === null) {
+  //       services = await this.allfilterServices(body.dateFrom, body.dateUntil);
+  //     } else {
+  //       services = await this.allfilterServicesWithProductType(
+  //         body.dateFrom,
+  //         body.dateUntil,
+  //         body.productTypeId,
+  //       );
+  //     }
+  //     return {
+  //       numberOfServices: this.getnumberOfServices(services),
+  //       reentryServices: this.getReentryServices(services),
+  //       repairServices: this.getRepairServices(services).length,
+  //       repairTime: this.getRepairedTime(services),
+  //       repairTimeOfStay: this.getStayInformation(services),
+  //       failureServices: this.getFailureTypes(services),
+  //       productTypeServices: this.getProductTypes(services),
+  //     };
+  //   } catch (error) {}
+  // }
+
   async getServiceIndicators(body: any): Promise<any> {
     try {
-      let services: ServiceEntity[] = [];
-      if (body.productTypeId === null) {
-        services = await this.allfilterServices(body.dateFrom, body.dateUntil);
+      const services: ServiceEntity[] =
+        body.productTypeId === null
+          ? await this.allfilterServices(body.dateFrom, body.dateUntil)
+          : await this.allfilterServicesWithProductType(
+              body.dateFrom,
+              body.dateUntil,
+              body.productTypeId,
+            );
+
+      if (services && services.length > 0) {
+        return {
+          numberOfServices: this.getnumberOfServices(services),
+          reentryServices: this.getReentryServices(services),
+          repairServices: this.getRepairServices(services).length,
+          repairTime: this.getRepairedTime(services),
+          repairTimeOfStay: this.getStayInformation(services),
+          failureServices: this.getFailureTypes(services),
+          productTypeServices: this.getProductTypes(services),
+        };
       } else {
-        services = await this.allfilterServicesWithProductType(
-          body.dateFrom,
-          body.dateUntil,
-          body.productTypeId,
-        );
+        return null;
       }
-      return {
-        numberOfServices: this.getnumberOfServices(services),
-        reentryServices: this.getReentryServices(services),
-        repairServices: this.getRepairServices(services).length,
-        repairTime: this.getRepairedTime(services),
-        repairTimeOfStay: this.getStayInformation(services),
-        failureServices: this.getFailureTypes(services),
-        productTypeServices: this.getProductTypes(services),
-      };
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 
   async allfilterServices(dateFrom: Date, dateUntil: Date): Promise<any> {
