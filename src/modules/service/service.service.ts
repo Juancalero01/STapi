@@ -229,6 +229,7 @@ export class ServiceService {
         repairTime: this.getRepairedTime(services),
         repairTimeOfStay: this.getStayInformation(services),
         failureServices: this.getFailureTypes(services),
+        productTypeServices: this.getProductTypes(services),
       };
     } catch (error) {}
   }
@@ -270,7 +271,6 @@ export class ServiceService {
     }
   }
 
-  // !VERIFICAR MEDIANTE SI NO HAY SERVICIOS.LENGHT === 0
   private getnumberOfServices(services: ServiceEntity[]) {
     return services.length;
   }
@@ -358,5 +358,30 @@ export class ServiceService {
       }),
     );
     return failureTypes;
+  }
+
+  private getProductTypes(
+    services: ServiceEntity[],
+  ): { productType: string; percentage: number }[] {
+    const productTypesMap = new Map<string, number>();
+    const allProductTypes = services.map(
+      (service) => service.product.productType.name,
+    );
+
+    allProductTypes.forEach((productTypeName) => {
+      productTypesMap.set(
+        productTypeName,
+        (productTypesMap.get(productTypeName) || 0) + 1,
+      );
+    });
+
+    const productTypes = Array.from(productTypesMap.entries()).map(
+      ([name, count]) => ({
+        productType: name,
+        percentage: Math.round((count / allProductTypes.length) * 100),
+      }),
+    );
+
+    return productTypes;
   }
 }
