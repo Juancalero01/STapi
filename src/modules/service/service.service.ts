@@ -33,12 +33,27 @@ export class ServiceService {
     }
   }
 
+  async getServiceMain(): Promise<any> {
+    try {
+      return {
+        services: await this.findAllWithOutCancel(),
+        servicesActive: (await this.findAllActiveServices()).length,
+        servicesRepair: await this.findAllWithRepair(),
+        servicesWithOutRepair: await this.findAllWithOutRepair(),
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findAllActiveServices(): Promise<ServiceEntity[]> {
     try {
-      return await this.serviceRepository.find({
+      const services = await this.serviceRepository.find({
         where: { state: Not(In([11, 12])) },
         relations: ['product', 'state', 'priority', 'failureTypes'],
       });
+
+      return services;
     } catch (error) {
       throw error;
     }
@@ -58,17 +73,16 @@ export class ServiceService {
 
   async findAllWithRepair(): Promise<number> {
     try {
-      const repairStateId = 8;
-
-      const services = await this.serviceRepository
-        .createQueryBuilder('service')
-        .innerJoinAndSelect(
-          'service_histories',
-          'history',
-          'service.id = history.serviceId',
-        )
-        .where('history.stateCurrentId = :repairStateId', { repairStateId })
-        .getMany();
+      const services = await this.serviceRepository.find({
+        relations: ['serviceHistory'],
+        where: {
+          serviceHistory: {
+            stateCurrent: {
+              id: 8,
+            },
+          },
+        },
+      });
       return services.length;
     } catch (error) {
       throw error;
@@ -77,19 +91,16 @@ export class ServiceService {
 
   async findAllWithOutRepair(): Promise<number> {
     try {
-      const withOutRepairStateId = 7;
-
-      const services = await this.serviceRepository
-        .createQueryBuilder('service')
-        .innerJoinAndSelect(
-          'service_histories',
-          'history',
-          'service.id = history.serviceId',
-        )
-        .where('history.stateCurrentId = :withOutRepairStateId', {
-          withOutRepairStateId,
-        })
-        .getMany();
+      const services = await this.serviceRepository.find({
+        relations: ['serviceHistory'],
+        where: {
+          serviceHistory: {
+            stateCurrent: {
+              id: 7,
+            },
+          },
+        },
+      });
       return services.length;
     } catch (error) {
       throw error;
@@ -209,30 +220,6 @@ export class ServiceService {
       throw error;
     }
   }
-
-  // async getServiceIndicators(body: any): Promise<any> {
-  //   try {
-  //     let services: ServiceEntity[] = [];
-  //     if (body.productTypeId === null) {
-  //       services = await this.allfilterServices(body.dateFrom, body.dateUntil);
-  //     } else {
-  //       services = await this.allfilterServicesWithProductType(
-  //         body.dateFrom,
-  //         body.dateUntil,
-  //         body.productTypeId,
-  //       );
-  //     }
-  //     return {
-  //       numberOfServices: this.getnumberOfServices(services),
-  //       reentryServices: this.getReentryServices(services),
-  //       repairServices: this.getRepairServices(services).length,
-  //       repairTime: this.getRepairedTime(services),
-  //       repairTimeOfStay: this.getStayInformation(services),
-  //       failureServices: this.getFailureTypes(services),
-  //       productTypeServices: this.getProductTypes(services),
-  //     };
-  //   } catch (error) {}
-  // }
 
   async getServiceIndicators(body: any): Promise<any> {
     try {

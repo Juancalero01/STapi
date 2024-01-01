@@ -74,32 +74,11 @@ export class ServiceController {
     }
   }
 
-  //! VERIFICAR ESTOS ALL capaz se modifique para que retorne solamente una peiticion, para evitar varias peticiones a la vez.- allwoc allwor allwr
-  @Get('/allwoc')
+  @Get('/h')
   @Roles('ADMINISTRADOR', 'TECNICO')
-  async findAllWithOutCancel(): Promise<number> {
+  async getServiceMain(): Promise<any> {
     try {
-      return await this.serviceService.findAllWithOutCancel();
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Get('/allwor')
-  @Roles('ADMINISTRADOR', 'TECNICO')
-  async findAllWithOutRepair(): Promise<number> {
-    try {
-      return await this.serviceService.findAllWithOutRepair();
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @Get('/allwr')
-  @Roles('ADMINISTRADOR', 'TECNICO')
-  async findAllWithRepair(): Promise<number> {
-    try {
-      return await this.serviceService.findAllWithRepair();
+      return await this.serviceService.getServiceMain();
     } catch (error) {
       throw error;
     }
