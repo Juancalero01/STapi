@@ -124,7 +124,6 @@ export class ServiceController {
     @Body('state') state: ServiceStateEntity,
   ): Promise<void> {
     try {
-      console.log(state);
       return await this.serviceService.updateState(id, state);
     } catch (error) {
       throw error;
