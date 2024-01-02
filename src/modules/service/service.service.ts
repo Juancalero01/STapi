@@ -248,7 +248,6 @@ export class ServiceService {
         return {
           numberOfServices: this.getnumberOfServices(services),
           reentryServices: this.getReentryServices(services),
-          repairServices: this.getRepairServices(services).length,
           repairTime: this.getRepairedTime(services),
           repairTimeOfStay: this.getStayInformation(services),
           failureServices: this.getFailureTypes(services),
@@ -310,103 +309,101 @@ export class ServiceService {
     ).length;
   }
 
-  private getRepairServices(services: ServiceEntity[]) {
-    return services.filter((service) =>
-      service.serviceHistory.some(
-        (history) =>
-          history.stateCurrent.id === 6 || history.stateCurrent.id === 8,
-      ),
-    );
-  }
-
-  private getRepairedTime(services: ServiceEntity[]): {} {
+  private getRepairedTime(services: ServiceEntity[]): {
+    totalHours: number;
+    averageHours: number;
+  } {
     const totalServices = services.length;
+
     if (totalServices === 0) {
-      return {
-        totalHours: 0,
-        averageHours: 0,
-      };
+      return { totalHours: 0, averageHours: 0 };
     }
+
     const totalHours = services.reduce(
-      (acc, service) => acc + service.repairedTime,
+      (acc, service) => acc + (service.repairedTime || 0),
       0,
     );
     const averageHours = Math.round(totalHours / totalServices);
 
-    return {
-      totalHours: totalHours,
-      averageHours: averageHours,
-    };
+    return { totalHours, averageHours };
   }
 
-  private getStayInformation(services: ServiceEntity[]): {} {
+  private getStayInformation(services: ServiceEntity[]): {
+    totalDays: number;
+    averageDays: number;
+  } {
     const totalServices = services.length;
+
     if (totalServices === 0) {
       return {
         totalDays: 0,
         averageDays: 0,
       };
     }
-    const totalDays = services.reduce(
-      (acc, service) => acc + this.calculateTimeOfStay(service),
-      0,
-    );
+
+    const totalDays = services.reduce((acc, service) => {
+      const timeOfStay = this.calculateTimeOfStay(service);
+      return timeOfStay != null ? acc + timeOfStay : acc;
+    }, 0);
+
     const averageDays = Math.round(totalDays / totalServices);
-    return {
-      totalDays: totalDays,
-      averageDays: averageDays,
-    };
+
+    return { totalDays, averageDays };
   }
 
-  private calculateTimeOfStay(service: ServiceEntity): number {
-    const dateEntry = new Date(service.dateEntry);
-    const dateDeparture = new Date(service.dateDeparture);
-    const timeDifference = dateDeparture.getTime() - dateEntry.getTime();
+  private calculateTimeOfStay(service: ServiceEntity): number | null {
+    const { dateEntry, dateDeparture } = service;
+
+    if (dateDeparture === null) {
+      return null;
+    }
+
+    const timeDifference =
+      new Date(dateDeparture).getTime() - new Date(dateEntry).getTime();
     const daysOfStay = timeDifference / (1000 * 60 * 60 * 24);
+
     return Math.floor(daysOfStay);
   }
 
   private getFailureTypes(
     services: ServiceEntity[],
   ): { failure: string; percentage: number }[] {
-    const failureTypesMap = new Map<string, number>();
     const allFailures = services.flatMap(
       (service) => service.failureTypes || [],
     );
-    allFailures.forEach((failureType) => {
-      failureTypesMap.set(
-        failureType.name,
-        (failureTypesMap.get(failureType.name) || 0) + 1,
-      );
-    });
+
+    const failureTypesMap = allFailures.reduce((map, failureType) => {
+      map.set(failureType.name, (map.get(failureType.name) || 0) + 1);
+      return map;
+    }, new Map<string, number>());
+
+    const totalFailures = allFailures.length;
+
     const failureTypes = Array.from(failureTypesMap.entries()).map(
       ([name, count]) => ({
         failure: name,
-        percentage: Math.round((count / allFailures.length) * 100),
+        percentage: Math.round((count / totalFailures) * 100),
       }),
     );
+
     return failureTypes;
   }
 
   private getProductTypes(
     services: ServiceEntity[],
   ): { productType: string; percentage: number }[] {
-    const productTypesMap = new Map<string, number>();
-    const allProductTypes = services.map(
-      (service) => service.product.productType.name,
-    );
+    const productTypesMap = services.reduce((map, service) => {
+      const productTypeName = service.product.productType.name;
+      map.set(productTypeName, (map.get(productTypeName) || 0) + 1);
+      return map;
+    }, new Map<string, number>());
 
-    allProductTypes.forEach((productTypeName) => {
-      productTypesMap.set(
-        productTypeName,
-        (productTypesMap.get(productTypeName) || 0) + 1,
-      );
-    });
+    const totalProductTypes = services.length;
 
     const productTypes = Array.from(productTypesMap.entries()).map(
       ([name, count]) => ({
         productType: name,
-        percentage: Math.round((count / allProductTypes.length) * 100),
+        percentage: Math.round((count / totalProductTypes) * 100),
       }),
     );
 
