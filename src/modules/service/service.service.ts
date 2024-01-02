@@ -50,7 +50,19 @@ export class ServiceService {
     try {
       const services = await this.serviceRepository.find({
         where: { state: Not(In([11, 12])) },
-        relations: ['product', 'state', 'priority', 'failureTypes'],
+        relations: [
+          'product',
+          'state',
+          'priority',
+          'failureTypes',
+          'serviceHistory',
+        ],
+        order: {
+          priority: {
+            id: 'ASC',
+          },
+          dateEntry: 'DESC',
+        },
       });
 
       return services;
