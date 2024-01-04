@@ -7,6 +7,9 @@ export class ServicePriorityEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 150, nullable: false })
   name: string;
 
+  @Column({ type: 'integer', nullable: true })
+  days: number;
+
   @OneToMany(() => ServiceEntity, (service) => service.state)
   service: ServiceEntity;
 }

@@ -14,7 +14,7 @@ export class ServicePriorityService {
 
   async findAll(): Promise<ServicePriorityEntity[]> {
     try {
-      return await this.serviceStateRepository.find({});
+      return await this.serviceStateRepository.find();
     } catch (error) {
       throw error;
     }
