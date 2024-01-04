@@ -76,6 +76,12 @@ export class ServiceEntity extends BaseEntity {
   @Column({ type: 'integer', nullable: true })
   repairedTime: number;
 
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  bitrixUrl: string;
+
   @OneToMany(
     () => ServiceHistoryEntity,
     (serviceHistory) => serviceHistory.service,

@@ -16,6 +16,7 @@ export class CreateServiceDto {
   warranty: boolean;
   securityStrap: boolean;
   repairedTime: number;
+  bitrixUrl: string;
   product: ProductEntity;
   state: ServiceStateEntity;
   priority: ServicePriorityEntity;
