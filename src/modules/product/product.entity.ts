@@ -9,7 +9,7 @@ export class ProductEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 10, unique: true, nullable: false })
   serial: string;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
+  @Column({ type: 'varchar', length: 50, nullable: false })
   reference: string;
 
   @Column({ type: 'datetime', nullable: false })
