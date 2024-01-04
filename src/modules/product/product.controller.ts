@@ -42,7 +42,7 @@ export class ProductController {
   }
 
   @Get('s/:serial')
-  @Roles('ADMINISTRADOR')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findOneSerial(@Param('serial') serial: string): Promise<ProductEntity> {
     try {
       return await this.productService.findOneSerial(serial);

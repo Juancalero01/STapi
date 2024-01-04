@@ -95,7 +95,7 @@ export class ServiceController {
   }
 
   @Post('/')
-  @Roles('ADMINISTRADOR')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async create(@Body() body: CreateServiceDto): Promise<void> {
     try {
       return await this.serviceService.create(body);
