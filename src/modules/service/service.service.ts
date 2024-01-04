@@ -187,6 +187,7 @@ export class ServiceService {
         orderNumber: body.orderNumber,
         quoteNumber: body.quoteNumber,
         priority: body.priority,
+        bitrixUrl: body.bitrixUrl,
       });
     } catch (error) {
       throw error;
