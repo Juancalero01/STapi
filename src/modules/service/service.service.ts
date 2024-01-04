@@ -35,21 +35,32 @@ export class ServiceService {
 
   async getServiceMain(): Promise<any> {
     try {
+      const currentYear = new Date().getFullYear();
+
       return {
-        services: await this.findAllWithOutCancel(),
-        servicesActive: (await this.findAllActiveServices()).length,
-        servicesRepair: await this.findAllWithRepair(),
-        servicesWithOutRepair: await this.findAllWithOutRepair(),
+        services: await this.findAllWithOutCancel(currentYear),
+        servicesActive: (await this.findAllActiveServices(currentYear)).length,
+        servicesRepair: await this.findAllWithRepair(currentYear),
+        servicesWithOutRepair: await this.findAllWithOutRepair(currentYear),
       };
     } catch (error) {
       throw error;
     }
   }
 
-  async findAllActiveServices(): Promise<ServiceEntity[]> {
+  async findAllActiveServices(year?: number): Promise<ServiceEntity[]> {
     try {
+      const whereConditions: any = { state: Not(In([11, 12])) };
+
+      if (year !== undefined) {
+        whereConditions.dateEntry = Between(
+          new Date(`${year}-01-01`),
+          new Date(`${year + 1}-01-01`),
+        );
+      }
+
       const services = await this.serviceRepository.find({
-        where: { state: Not(In([11, 12])) },
+        where: whereConditions,
         relations: [
           'product',
           'state',
@@ -71,10 +82,16 @@ export class ServiceService {
     }
   }
 
-  async findAllWithOutCancel(): Promise<number> {
+  async findAllWithOutCancel(year: number): Promise<number> {
     try {
       const services = await this.serviceRepository.find({
-        where: { state: Not(12) },
+        where: {
+          state: Not(12),
+          dateEntry: Between(
+            new Date(`${year}-01-01`),
+            new Date(`${year + 1}-01-01`),
+          ),
+        },
         relations: ['product', 'state', 'priority', 'failureTypes'],
       });
       return services.length;
@@ -83,7 +100,7 @@ export class ServiceService {
     }
   }
 
-  async findAllWithRepair(): Promise<number> {
+  async findAllWithRepair(year: number): Promise<number> {
     try {
       const services = await this.serviceRepository.find({
         relations: ['serviceHistory'],
@@ -93,6 +110,10 @@ export class ServiceService {
               id: 8,
             },
           },
+          dateEntry: Between(
+            new Date(`${year}-01-01`),
+            new Date(`${year + 1}-01-01`),
+          ),
         },
       });
       return services.length;
@@ -101,7 +122,7 @@ export class ServiceService {
     }
   }
 
-  async findAllWithOutRepair(): Promise<number> {
+  async findAllWithOutRepair(year: number): Promise<number> {
     try {
       const services = await this.serviceRepository.find({
         relations: ['serviceHistory'],
@@ -111,6 +132,10 @@ export class ServiceService {
               id: 7,
             },
           },
+          dateEntry: Between(
+            new Date(`${year}-01-01`),
+            new Date(`${year + 1}-01-01`),
+          ),
         },
       });
       return services.length;
