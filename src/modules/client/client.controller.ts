@@ -22,7 +22,7 @@ export class ClientController {
   constructor(private readonly clientService: ClientService) {}
 
   @Get('/')
-  @Roles('ADMINISTRADOR')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll(): Promise<ClientEntity[]> {
     try {
       return await this.clientService.findAll();

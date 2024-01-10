@@ -22,7 +22,7 @@ export class ProductTypeController {
   constructor(private readonly productTypeService: ProductTypeService) {}
 
   @Get('/')
-  @Roles('ADMINISTRADOR')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll(): Promise<ProductTypeEntity[]> {
     try {
       return await this.productTypeService.findAll();
