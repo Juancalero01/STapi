@@ -23,7 +23,7 @@ export class ServiceService {
           'failureTypes',
           'serviceHistory',
         ],
-        where: { state: Not(12) },
+        where: { state: Not(13) },
         order: {
           dateEntry: 'DESC',
         },
@@ -50,7 +50,7 @@ export class ServiceService {
 
   async findAllActiveServices(year?: number): Promise<ServiceEntity[]> {
     try {
-      const whereConditions: any = { state: Not(In([11, 12])) };
+      const whereConditions: any = { state: Not(In([12, 13])) };
 
       if (year !== undefined) {
         whereConditions.dateEntry = Between(
@@ -86,7 +86,7 @@ export class ServiceService {
     try {
       const services = await this.serviceRepository.find({
         where: {
-          state: Not(12),
+          state: Not(13),
           dateEntry: Between(
             new Date(`${year}-01-01`),
             new Date(`${year + 1}-01-01`),
@@ -292,7 +292,7 @@ export class ServiceService {
       return await this.serviceRepository.find({
         where: {
           dateEntry: Between(new Date(dateFrom), new Date(dateUntil)),
-          state: Not(12),
+          state: Not(13),
         },
         relations: ['serviceHistory', 'failureTypes'],
       });
@@ -310,7 +310,7 @@ export class ServiceService {
       return await this.serviceRepository.find({
         where: {
           dateEntry: Between(new Date(dateFrom), new Date(dateUntil)),
-          state: Not(12),
+          state: Not(13),
           product: {
             productType: {
               id: productTypeId,
@@ -354,6 +354,7 @@ export class ServiceService {
     return { totalHours, averageHours };
   }
 
+  //!MODIFICAR CUANDO EL ESTADO NUEVO SE AGREGUE, SE DEBE HACER QUE CUENTE LAS HORAS DE CADA REPARACIÓN QUE ESTA HACIENDO EL TÉCNICO YA QUE PUEDE VOLVER SI ES QUE FALLA EL TEST CRUZADO.
   private getStayInformation(services: ServiceEntity[]): {
     totalDays: number;
     averageDays: number;
