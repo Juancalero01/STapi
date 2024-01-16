@@ -264,14 +264,7 @@ export class ServiceService {
 
   async getServiceIndicators(body: any): Promise<any> {
     try {
-      const services: ServiceEntity[] =
-        body.productTypeId === null
-          ? await this.allfilterServices(body.dateFrom, body.dateUntil)
-          : await this.allfilterServicesWithProductType(
-              body.dateFrom,
-              body.dateUntil,
-              body.productTypeId,
-            );
+      const services = await this.filterServices(body);
 
       if (services && services.length > 0) {
         return {
@@ -290,6 +283,31 @@ export class ServiceService {
       }
     } catch (error) {
       throw error;
+    }
+  }
+
+  private async filterServices(body: any): Promise<ServiceEntity[]> {
+    if (body.productTypeId === null && body.clientId === null) {
+      return this.allfilterServices(body.dateFrom, body.dateUntil);
+    } else if (body.productTypeId !== null && body.clientId === null) {
+      return this.allfilterServicesWithProductType(
+        body.dateFrom,
+        body.dateUntil,
+        body.productTypeId,
+      );
+    } else if (body.productTypeId === null && body.clientId !== null) {
+      return this.allfilterServicesWithClient(
+        body.dateFrom,
+        body.dateUntil,
+        body.clientId,
+      );
+    } else {
+      return this.allfilterServicesWithProductTypeAndClient(
+        body.dateFrom,
+        body.dateUntil,
+        body.productTypeId,
+        body.clientId,
+      );
     }
   }
 
@@ -318,6 +336,56 @@ export class ServiceService {
           dateEntry: Between(new Date(dateFrom), new Date(dateUntil)),
           state: Not(13),
           product: {
+            productType: {
+              id: productTypeId,
+            },
+          },
+        },
+        relations: ['serviceHistory', 'failureTypes', 'product'],
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async allfilterServicesWithClient(
+    dateFrom: Date,
+    dateUntil: Date,
+    clientId: number,
+  ): Promise<any> {
+    try {
+      return await this.serviceRepository.find({
+        where: {
+          dateEntry: Between(new Date(dateFrom), new Date(dateUntil)),
+          state: Not(13),
+          product: {
+            client: {
+              id: clientId,
+            },
+          },
+        },
+        relations: ['serviceHistory', 'failureTypes', 'product'],
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async allfilterServicesWithProductTypeAndClient(
+    dateFrom: Date,
+    dateUntil: Date,
+    productTypeId: number,
+    clientId: number,
+  ): Promise<any> {
+    try {
+      return await this.serviceRepository.find({
+        where: {
+          dateEntry: Between(new Date(dateFrom), new Date(dateUntil)),
+          state: Not(13),
+          product: {
+            client: {
+              id: clientId,
+            },
             productType: {
               id: productTypeId,
             },
