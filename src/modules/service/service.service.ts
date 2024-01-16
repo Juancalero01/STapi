@@ -107,7 +107,10 @@ export class ServiceService {
         where: {
           serviceHistory: {
             stateCurrent: {
-              id: 8,
+              id: 9,
+            },
+            stateNext: {
+              id: 10,
             },
           },
           dateEntry: Between(
@@ -278,6 +281,9 @@ export class ServiceService {
           repairTimeOfStay: this.getStayInformation(services),
           failureServices: this.getFailureTypes(services),
           productTypeServices: this.getProductTypes(services),
+          numberOfServicesRepair: this.getServicesRepair(services),
+          numberOfServicesNotRepair: this.getServicesNotRepair(services),
+          warranty: this.getWarrantyPercentage(services),
         };
       } else {
         return null;
@@ -354,7 +360,6 @@ export class ServiceService {
     return { totalHours, averageHours };
   }
 
-  //!MODIFICAR CUANDO EL ESTADO NUEVO SE AGREGUE, SE DEBE HACER QUE CUENTE LAS HORAS DE CADA REPARACIÓN QUE ESTA HACIENDO EL TÉCNICO YA QUE PUEDE VOLVER SI ES QUE FALLA EL TEST CRUZADO.
   private getStayInformation(services: ServiceEntity[]): {
     totalDays: number;
     averageDays: number;
@@ -435,5 +440,48 @@ export class ServiceService {
     );
 
     return productTypes;
+  }
+
+  private getServicesRepair(services: ServiceEntity[]): number {
+    return services.filter((service) => {
+      const repairHistoryEntry = service.serviceHistory.find((sh) => {
+        return sh.stateCurrent.id === 9 && sh.stateNext.id === 10;
+      });
+
+      return repairHistoryEntry !== undefined;
+    }).length;
+  }
+
+  private getServicesNotRepair(services: ServiceEntity[]): number {
+    return services.filter((service) => {
+      const repairHistoryEntry = service.serviceHistory.find((sh) => {
+        return sh.stateCurrent.id === 7 && sh.stateNext.id === 10;
+      });
+
+      return repairHistoryEntry !== undefined;
+    }).length;
+  }
+
+  private getWarrantyPercentage(services: ServiceEntity[]): {
+    inWarranty: number;
+    notInWarranty: number;
+  } {
+    const totalServices = services.length;
+
+    const inWarrantyCount = services.filter((s) => s.warranty === true).length;
+    const notInWarrantyCount = services.filter(
+      (s) => s.warranty === false,
+    ).length;
+
+    const inWarrantyPercentage = Math.round(
+      (inWarrantyCount / totalServices) * 100,
+    );
+    const notInWarrantyPercentage = Math.round(
+      (notInWarrantyCount / totalServices) * 100,
+    );
+    return {
+      inWarranty: inWarrantyPercentage,
+      notInWarranty: notInWarrantyPercentage,
+    };
   }
 }
