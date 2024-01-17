@@ -13,20 +13,24 @@ export class ServiceHistoryEntity extends BaseEntity {
 
   @ManyToOne(() => ServiceStateEntity, (state) => state.nextServiceHistory, {
     eager: true,
+    nullable: true,
   })
   stateNext: ServiceStateEntity;
 
-  @Column({ type: 'varchar', length: 500, nullable: false })
+  @Column({ type: 'varchar', length: 500, nullable: true })
   remarks: string;
 
-  @ManyToOne(() => ServiceEntity, (service) => service.serviceHistory)
+  @ManyToOne(() => ServiceEntity, (service) => service.serviceHistory, {
+    nullable: true,
+  })
   service: ServiceEntity;
 
   @ManyToOne(() => UserEntity, (user) => user.serviceHistory, {
     eager: true,
+    nullable: true,
   })
   user: UserEntity;
 
-  @Column({ type: 'datetime', nullable: false })
+  @Column({ type: 'datetime', nullable: true })
   dateEntry: Date;
 }
