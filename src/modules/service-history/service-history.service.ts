@@ -30,6 +30,19 @@ export class ServiceHistoryService {
     }
   }
 
+  async findLastHistory(id: number): Promise<ServiceHistoryEntity> {
+    try {
+      return await this.serviceHistoryRepository
+        .createQueryBuilder('serviceHistory')
+        .orderBy('serviceHistory.id', 'DESC')
+        .where('serviceHistory.serviceId = :id', { id })
+        .limit(1)
+        .getOne();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findService(id: number): Promise<ServiceHistoryEntity[]> {
     try {
       return await this.serviceHistoryRepository.find({

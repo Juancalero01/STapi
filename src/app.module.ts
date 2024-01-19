@@ -13,6 +13,7 @@ import { ServiceHistoryModule } from './modules/service-history/service-history.
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { RoleModule } from './modules/role/role.module';
+import { ServiceNoteModule } from './modules/service-note/service-note.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { RoleModule } from './modules/role/role.module';
     ProductTypeModule,
     ServiceModule,
     ServiceHistoryModule,
+    ServiceNoteModule,
     ServiceStateModule,
     ServicePriorityModule,
     ProvinceModule,

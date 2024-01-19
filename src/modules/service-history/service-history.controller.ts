@@ -41,6 +41,18 @@ export class ServiceHistoryController {
     }
   }
 
+  @Get('r/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async findLastHistory(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ServiceHistoryEntity> {
+    try {
+      return await this.serviceHistoryService.findLastHistory(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('/:id')
   @Roles('ADMINISTRADOR', 'TECNICO')
   async findOne(
@@ -48,7 +60,9 @@ export class ServiceHistoryController {
   ): Promise<ServiceHistoryEntity> {
     try {
       return await this.serviceHistoryService.findOne(id);
-    } catch (error) {}
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Post('/')

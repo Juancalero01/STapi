@@ -1,8 +1,9 @@
 import { BaseEntity } from 'src/shared/entities/base.entity';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ServiceEntity } from '../service/service.entity';
 import { ServiceStateEntity } from '../service-state/service-state.entity';
 import { UserEntity } from '../user/user.entity';
+import { ServiceNoteEntity } from '../service-note/service-note.entity';
 
 @Entity('service_histories')
 export class ServiceHistoryEntity extends BaseEntity {
@@ -33,4 +34,7 @@ export class ServiceHistoryEntity extends BaseEntity {
 
   @Column({ type: 'datetime', nullable: true })
   dateEntry: Date;
+
+  @OneToMany(() => ServiceNoteEntity, (note) => note.serviceHistory)
+  serviceNote: ServiceNoteEntity;
 }
