@@ -30,14 +30,30 @@ export class ServiceHistoryService {
     }
   }
 
+  // async findLastHistory(id: number): Promise<ServiceHistoryEntity> {
+  //   try {
+  //     return await this.serviceHistoryRepository
+  //       .createQueryBuilder('serviceHistory')
+  //       .orderBy('serviceHistory.id', 'DESC')
+  //       .where('serviceHistory.serviceId = :id', { id })
+  //       .limit(1)
+  //       .getOne();
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
   async findLastHistory(id: number): Promise<ServiceHistoryEntity> {
     try {
-      return await this.serviceHistoryRepository
-        .createQueryBuilder('serviceHistory')
-        .orderBy('serviceHistory.id', 'DESC')
-        .where('serviceHistory.serviceId = :id', { id })
-        .limit(1)
-        .getOne();
+      return await this.serviceHistoryRepository.findOne({
+        where: {
+          service: {
+            id: id,
+          },
+        },
+        order: { id: 'DESC' },
+        relations: ['stateCurrent', 'stateNext'],
+      });
     } catch (error) {
       throw error;
     }
