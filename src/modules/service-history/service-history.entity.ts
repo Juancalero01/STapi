@@ -38,5 +38,5 @@ export class ServiceHistoryEntity extends BaseEntity {
   @OneToMany(() => ServiceNoteEntity, (note) => note.serviceHistory, {
     eager: true,
   })
-  serviceNote: ServiceNoteEntity;
+  serviceNote: ServiceNoteEntity[];
 }
