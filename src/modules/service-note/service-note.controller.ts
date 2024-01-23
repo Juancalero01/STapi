@@ -16,13 +16,13 @@ import { JwtGuard } from '../auth/jwt/jwt.guard';
 import { Roles } from '../role/common/role.decorator';
 import { ServiceNoteEntity } from './service-note.entity';
 
-// @UseGuards(JwtGuard, RolesGuard)
+@UseGuards(JwtGuard, RolesGuard)
 @Controller('service-note')
 export class ServiceNoteController {
   constructor(private readonly serviceNoteService: ServiceNoteService) {}
 
   @Get('/')
-  // @Roles('ADMINISTRADOR', 'TECNICO')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll(): Promise<ServiceNoteEntity[]> {
     try {
       return this.serviceNoteService.findAll();
@@ -32,7 +32,7 @@ export class ServiceNoteController {
   }
 
   @Get('/:id')
-  // @Roles('ADMINISTRADOR', 'TECNICO')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   findOne(@Param('id', ParseIntPipe) id: number): Promise<ServiceNoteEntity> {
     try {
       return this.serviceNoteService.findOne(id);
@@ -54,7 +54,7 @@ export class ServiceNoteController {
   }
 
   @Post('/')
-  // @Roles('ADMINISTRADOR', 'TECNICO')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   create(@Body() body: CreateServiceNoteDto) {
     try {
       return this.serviceNoteService.create(body);
@@ -64,7 +64,7 @@ export class ServiceNoteController {
   }
 
   @Put('/:id')
-  // @Roles('ADMINISTRADOR', 'TECNICO')
+  @Roles('ADMINISTRADOR', 'TECNICO')
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateServiceNoteDto,

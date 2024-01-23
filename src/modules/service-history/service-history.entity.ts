@@ -35,6 +35,8 @@ export class ServiceHistoryEntity extends BaseEntity {
   @Column({ type: 'datetime', nullable: true })
   dateEntry: Date;
 
-  @OneToMany(() => ServiceNoteEntity, (note) => note.serviceHistory)
+  @OneToMany(() => ServiceNoteEntity, (note) => note.serviceHistory, {
+    eager: true,
+  })
   serviceNote: ServiceNoteEntity;
 }

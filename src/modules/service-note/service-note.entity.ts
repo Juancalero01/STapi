@@ -18,7 +18,6 @@ export class ServiceNoteEntity extends BaseEntity {
   user: UserEntity;
 
   @ManyToOne(() => ServiceHistoryEntity, (history) => history.serviceNote, {
-    eager: true,
     nullable: false,
   })
   serviceHistory: ServiceHistoryEntity;

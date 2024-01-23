@@ -15,7 +15,7 @@ export class ServiceNoteService {
   async findAll(): Promise<ServiceNoteEntity[]> {
     try {
       return await this.serviceNoteRepository.find({
-        relations: ['user', 'state'],
+        relations: ['user', 'state', 'serviceHistory'],
       });
     } catch (error) {
       throw error;
