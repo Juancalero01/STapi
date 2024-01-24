@@ -22,10 +22,10 @@ export class ServiceService {
           'priority',
           'failureTypes',
           'serviceHistory',
-          'serviceHistory',
           'serviceHistory.serviceNote',
           'serviceHistory.serviceNote.state',
           'serviceHistory.serviceNote.user',
+          'serviceHistory.serviceNote.serviceHistory',
         ],
         where: { state: Not(13) },
         order: {
