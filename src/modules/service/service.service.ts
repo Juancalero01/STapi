@@ -22,10 +22,6 @@ export class ServiceService {
           'priority',
           'failureTypes',
           'serviceHistory',
-          'serviceHistory.serviceNote',
-          'serviceHistory.serviceNote.state',
-          'serviceHistory.serviceNote.user',
-          'serviceHistory.serviceNote.serviceHistory',
         ],
         where: { state: Not(13) },
         order: {
@@ -559,5 +555,53 @@ export class ServiceService {
       inWarranty: inWarrantyPercentage,
       notInWarranty: notInWarrantyPercentage,
     };
+  }
+
+  async getServicesByProductSerial(serial: string): Promise<ServiceEntity[]> {
+    try {
+      return await this.serviceRepository.find({
+        relations: [
+          'product',
+          'state',
+          'priority',
+          'failureTypes',
+          'serviceHistory',
+          'serviceHistory.serviceNote',
+          'serviceHistory.serviceNote.state',
+          'serviceHistory.serviceNote.user',
+          'serviceHistory.serviceNote.serviceHistory',
+        ],
+        where: {
+          product: {
+            serial,
+          },
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getServicesByReclaim(reclaim: string): Promise<ServiceEntity[]> {
+    try {
+      return await this.serviceRepository.find({
+        relations: [
+          'product',
+          'state',
+          'priority',
+          'failureTypes',
+          'serviceHistory',
+          'serviceHistory.serviceNote',
+          'serviceHistory.serviceNote.state',
+          'serviceHistory.serviceNote.user',
+          'serviceHistory.serviceNote.serviceHistory',
+        ],
+        where: {
+          reclaim,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 }

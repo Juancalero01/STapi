@@ -54,6 +54,30 @@ export class ServiceController {
     }
   }
 
+  @Get('ss/:serial')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async getServicesByProductSerial(
+    @Param('serial') serial: string,
+  ): Promise<ServiceEntity[]> {
+    try {
+      return await this.serviceService.getServicesByProductSerial(serial);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Get('sr/:reclaim')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async getServicesByReclaim(
+    @Param('reclaim') reclaim: string,
+  ): Promise<ServiceEntity[]> {
+    try {
+      return await this.serviceService.getServicesByReclaim(reclaim);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('/all')
   @Roles('ADMINISTRADOR', 'TECNICO')
   async findAll(): Promise<ServiceEntity[]> {
