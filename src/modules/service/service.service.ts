@@ -575,6 +575,7 @@ export class ServiceService {
           product: {
             serial,
           },
+          state: Not(13),
         },
       });
     } catch (error) {
