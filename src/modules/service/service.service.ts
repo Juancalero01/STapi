@@ -71,6 +71,10 @@ export class ServiceService {
           'priority',
           'failureTypes',
           'serviceHistory',
+          'serviceHistory.serviceNote',
+          'serviceHistory.serviceNote.state',
+          'serviceHistory.serviceNote.user',
+          'serviceHistory.serviceNote.serviceHistory',
         ],
         order: {
           priority: {
