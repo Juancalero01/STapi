@@ -274,12 +274,12 @@ export class ServiceService {
         return {
           numberOfServices: this.getnumberOfServices(services),
           reentryServices: this.getReentryServices(services),
+          numberOfServicesRepair: this.getServicesRepair(services),
+          numberOfServicesNotRepair: this.getServicesNotRepair(services),
           repairTime: this.getRepairedTime(services),
           repairTimeOfStay: this.getStayInformation(services),
           failureServices: this.getFailureTypes(services),
           productTypeServices: this.getProductTypes(services),
-          numberOfServicesRepair: this.getServicesRepair(services),
-          numberOfServicesNotRepair: this.getServicesNotRepair(services),
           warranty: this.getWarrantyPercentage(services),
         };
       } else {
@@ -402,15 +402,33 @@ export class ServiceService {
     }
   }
 
-  private getnumberOfServices(services: ServiceEntity[]) {
-    return services.length;
+  private getnumberOfServices(services: ServiceEntity[]): ServiceEntity[] {
+    return services;
   }
 
-  private getReentryServices(services: ServiceEntity[]) {
+  private getReentryServices(services: ServiceEntity[]): ServiceEntity[] {
     return services.filter(
       (service, index, array) =>
         array.findIndex((s) => s.product.id === service.product.id) !== index,
-    ).length;
+    );
+  }
+  private getServicesRepair(services: ServiceEntity[]): ServiceEntity[] {
+    return services.filter((service) => {
+      const repairHistoryEntry = service.serviceHistory.find((sh) => {
+        return sh.stateCurrent.id === 9 && sh.stateNext.id === 10;
+      });
+
+      return repairHistoryEntry !== undefined;
+    });
+  }
+  private getServicesNotRepair(services: ServiceEntity[]): ServiceEntity[] {
+    return services.filter((service) => {
+      const repairHistoryEntry = service.serviceHistory.find((sh) => {
+        return sh.stateCurrent.id === 7 && sh.stateNext.id === 10;
+      });
+
+      return repairHistoryEntry !== undefined;
+    });
   }
 
   private getRepairedTime(services: ServiceEntity[]): {
@@ -512,26 +530,6 @@ export class ServiceService {
     );
 
     return productTypes;
-  }
-
-  private getServicesRepair(services: ServiceEntity[]): number {
-    return services.filter((service) => {
-      const repairHistoryEntry = service.serviceHistory.find((sh) => {
-        return sh.stateCurrent.id === 9 && sh.stateNext.id === 10;
-      });
-
-      return repairHistoryEntry !== undefined;
-    }).length;
-  }
-
-  private getServicesNotRepair(services: ServiceEntity[]): number {
-    return services.filter((service) => {
-      const repairHistoryEntry = service.serviceHistory.find((sh) => {
-        return sh.stateCurrent.id === 7 && sh.stateNext.id === 10;
-      });
-
-      return repairHistoryEntry !== undefined;
-    }).length;
   }
 
   private getWarrantyPercentage(services: ServiceEntity[]): {
