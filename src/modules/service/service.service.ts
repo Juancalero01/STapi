@@ -280,6 +280,7 @@ export class ServiceService {
           repairTimeOfStay: this.getStayInformation(services),
           failureServices: this.getFailureTypes(services),
           productTypeServices: this.getProductTypes(services),
+          clientServices: this.getClient(services),
           warranty: this.getWarrantyPercentage(services),
         };
       } else {
@@ -530,6 +531,25 @@ export class ServiceService {
     );
 
     return productTypes;
+  }
+
+  private getClient(
+    services: ServiceEntity[],
+  ): { taxpayerName: string; percentage: number }[] {
+    const clientsMap = services.reduce((map, service) => {
+      const clientTaxpayerName = service.product.client.taxpayerName;
+      map.set(clientTaxpayerName, (map.get(clientTaxpayerName) || 0) + 1);
+      return map;
+    }, new Map<string, number>());
+
+    const totalProductTypes = services.length;
+
+    const clients = Array.from(clientsMap.entries()).map(([name, count]) => ({
+      taxpayerName: name,
+      percentage: Math.round((count / totalProductTypes) * 100),
+    }));
+
+    return clients;
   }
 
   private getWarrantyPercentage(services: ServiceEntity[]): {
