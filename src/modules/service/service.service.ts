@@ -416,7 +416,7 @@ export class ServiceService {
   private getServicesRepair(services: ServiceEntity[]): ServiceEntity[] {
     return services.filter((service) => {
       const repairHistoryEntry = service.serviceHistory.find((sh) => {
-        return sh.stateCurrent.id === 9 && sh.stateNext.id === 10;
+        return sh.stateCurrent?.id === 9 && sh.stateNext?.id === 10;
       });
 
       return repairHistoryEntry !== undefined;
@@ -425,7 +425,7 @@ export class ServiceService {
   private getServicesNotRepair(services: ServiceEntity[]): ServiceEntity[] {
     return services.filter((service) => {
       const repairHistoryEntry = service.serviceHistory.find((sh) => {
-        return sh.stateCurrent.id === 7 && sh.stateNext.id === 10;
+        return sh.stateCurrent?.id === 7 && sh.stateNext?.id === 10;
       });
 
       return repairHistoryEntry !== undefined;
