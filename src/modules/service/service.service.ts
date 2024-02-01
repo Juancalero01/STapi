@@ -272,10 +272,11 @@ export class ServiceService {
 
       if (services && services.length > 0) {
         return {
-          numberOfServices: this.getnumberOfServices(services),
+          services: this.getnumberOfServices(services),
           reentryServices: this.getReentryServices(services),
-          numberOfServicesRepair: this.getServicesRepair(services),
-          numberOfServicesNotRepair: this.getServicesNotRepair(services),
+          servicesRepair: this.getServicesRepair(services),
+          servicesNotRepair: this.getServicesNotRepair(services),
+          servicesActive: this.getServicesActive(services),
           repairTime: this.getRepairedTime(services),
           repairTimeOfStay: this.getStayInformation(services),
           failureServices: this.getFailureTypes(services),
@@ -406,7 +407,6 @@ export class ServiceService {
   private getnumberOfServices(services: ServiceEntity[]): ServiceEntity[] {
     return services;
   }
-
   private getReentryServices(services: ServiceEntity[]): ServiceEntity[] {
     return services.filter(
       (service, index, array) =>
@@ -414,21 +414,24 @@ export class ServiceService {
     );
   }
   private getServicesRepair(services: ServiceEntity[]): ServiceEntity[] {
-    return services.filter((service) => {
-      const repairHistoryEntry = service.serviceHistory.find((sh) => {
-        return sh.stateCurrent?.id === 9 && sh.stateNext?.id === 10;
-      });
-
-      return repairHistoryEntry !== undefined;
-    });
+    return services.filter((service) =>
+      service.serviceHistory.some(
+        (sh) => sh.stateCurrent?.id === 9 && sh.stateNext?.id === 10,
+      ),
+    );
   }
-  private getServicesNotRepair(services: ServiceEntity[]): ServiceEntity[] {
-    return services.filter((service) => {
-      const repairHistoryEntry = service.serviceHistory.find((sh) => {
-        return sh.stateCurrent?.id === 7 && sh.stateNext?.id === 10;
-      });
 
-      return repairHistoryEntry !== undefined;
+  private getServicesNotRepair(services: ServiceEntity[]): ServiceEntity[] {
+    return services.filter((service) =>
+      service.serviceHistory.some(
+        (sh) => sh.stateCurrent?.id === 7 && sh.stateNext?.id === 10,
+      ),
+    );
+  }
+
+  private getServicesActive(services: ServiceEntity[]): ServiceEntity[] {
+    return services.filter((service) => {
+      return service.state && service.state.id !== 12;
     });
   }
 
