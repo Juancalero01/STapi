@@ -78,7 +78,7 @@ export class ServiceEntity extends BaseEntity {
 
   @Column({
     type: 'varchar',
-    nullable: false,
+    nullable: true,
   })
   bitrixUrl: string;
 
