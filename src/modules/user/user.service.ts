@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './user.entity';
 import { Repository } from 'typeorm';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -128,6 +128,27 @@ export class UserService {
       if (!userFound) throw new HttpException('User not found', 404);
       userFound.isActive = !userFound.isActive;
       await this.userRepository.update(id, userFound);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateProfile(
+    id: number,
+    body: { fullname: string; password: string; newPassword: string },
+  ): Promise<void> {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id },
+      });
+      if (!user) throw new HttpException('User not found', 404);
+      const isMatch = await compare(body.password, user.password);
+      if (!isMatch) {
+        throw new HttpException('Invalid credentials', 401);
+      }
+      user.fullname = body.fullname;
+      user.password = await hash(body.newPassword, 10);
+      this.userRepository.update(id, user);
     } catch (error) {
       throw error;
     }

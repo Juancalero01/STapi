@@ -69,4 +69,13 @@ export class UserController {
   ): Promise<void> {
     return this.userService.update(id, body);
   }
+
+  @Put('/pu/:id')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async updateProfile(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body,
+  ): Promise<void> {
+    return this.userService.updateProfile(id, body);
+  }
 }
