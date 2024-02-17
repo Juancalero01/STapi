@@ -140,6 +140,15 @@ export class UserService {
     try {
       const user = await this.userRepository.findOne({
         where: { id },
+        select: [
+          'id',
+          'username',
+          'fullname',
+          'email',
+          'role',
+          'password',
+          'isActive',
+        ],
       });
       if (!user) throw new HttpException('User not found', 404);
       const isMatch = await compare(body.password, user.password);
@@ -148,7 +157,7 @@ export class UserService {
       }
       user.fullname = body.fullname;
       user.password = await hash(body.newPassword, 10);
-      this.userRepository.update(id, user);
+      await this.userRepository.save(user);
     } catch (error) {
       throw error;
     }
