@@ -14,18 +14,16 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { RoleModule } from './modules/role/role.module';
 import { ServiceNoteModule } from './modules/service-note/service-note.module';
-
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseConfig } from './config/database.config';
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'CNET2023',
-      database: 'cnet',
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: DatabaseConfig,
     }),
     AuthModule,
     ClientModule,
@@ -42,5 +40,6 @@ import { ServiceNoteModule } from './modules/service-note/service-note.module';
     UserModule,
     RoleModule,
   ],
+  providers: [],
 })
 export class AppModule {}
