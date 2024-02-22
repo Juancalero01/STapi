@@ -5,6 +5,8 @@ import { Between, In, Not, Repository } from 'typeorm';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { ServiceStateEntity } from '../service-state/service-state.entity';
+import { ServicePriorityEntity } from '../service-priority/service-priority.entity';
+import { ProductEntity } from '../product/product.entity';
 
 @Injectable()
 export class ServiceService {
@@ -622,6 +624,22 @@ export class ServiceService {
           reclaim,
         },
       });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createServices(
+    body: {
+      dateEntry: Date;
+      reclaim: string;
+      state: ServiceStateEntity;
+      priority: ServicePriorityEntity;
+      product: ProductEntity;
+    }[],
+  ): Promise<void> {
+    try {
+      await this.serviceRepository.save(body);
     } catch (error) {
       throw error;
     }

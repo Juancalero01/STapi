@@ -55,7 +55,7 @@ export class ServiceEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: true, default: null })
   quoteNumber: string;
 
-  @Column({ type: 'boolean', nullable: true, default: false })
+  @Column({ type: 'boolean', nullable: true, default: null })
   securityStrap: boolean;
 
   @Column({ type: 'varchar', length: 255, nullable: true, default: null })
@@ -70,7 +70,7 @@ export class ServiceEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 500, nullable: true })
   remarks: string;
 
-  @Column({ type: 'boolean', nullable: true, default: false })
+  @Column({ type: 'boolean', nullable: true, default: null })
   warranty: boolean;
 
   @Column({ type: 'integer', nullable: true })
@@ -79,6 +79,7 @@ export class ServiceEntity extends BaseEntity {
   @Column({
     type: 'varchar',
     nullable: true,
+    default: null,
   })
   bitrixUrl: string;
 

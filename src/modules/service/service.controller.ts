@@ -16,6 +16,8 @@ import { ServiceStateEntity } from '../service-state/service-state.entity';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
 import { RolesGuard } from '../role/common/role.guard';
 import { Roles } from '../role/common/role.decorator';
+import { ServicePriorityEntity } from '../service-priority/service-priority.entity';
+import { ProductEntity } from '../product/product.entity';
 
 @UseGuards(JwtGuard, RolesGuard)
 @Controller('service')
@@ -175,6 +177,25 @@ export class ServiceController {
   ): Promise<void> {
     try {
       return await this.serviceService.setRepairedTime(id, repairedTime);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  @Post('/many')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async createServices(
+    @Body()
+    body: {
+      dateEntry: Date;
+      reclaim: string;
+      state: ServiceStateEntity;
+      priority: ServicePriorityEntity;
+      product: ProductEntity;
+    }[],
+  ): Promise<void> {
+    try {
+      return await this.serviceService.createServices(body);
     } catch (error) {
       throw error;
     }
