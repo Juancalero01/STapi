@@ -632,10 +632,12 @@ export class ServiceService {
   async createServices(
     body: {
       dateEntry: Date;
-      reclaim: string;
-      state: ServiceStateEntity;
       priority: ServicePriorityEntity;
       product: ProductEntity;
+      reclaim: string;
+      securityStrap: boolean;
+      startReference: string;
+      state: ServiceStateEntity;
     }[],
   ): Promise<void> {
     try {
