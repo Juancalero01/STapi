@@ -638,7 +638,7 @@ export class ServiceService {
       securityStrap: boolean;
       startReference: string;
       state: ServiceStateEntity;
-      waranty: boolean;
+      warranty: boolean;
     }[],
   ): Promise<void> {
     try {
