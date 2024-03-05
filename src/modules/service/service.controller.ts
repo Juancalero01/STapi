@@ -194,6 +194,7 @@ export class ServiceController {
       securityStrap: boolean;
       startReference: string;
       state: ServiceStateEntity;
+      warranty: boolean;
     }[],
   ): Promise<void> {
     try {
