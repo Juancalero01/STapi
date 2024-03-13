@@ -6,11 +6,12 @@ import { HttpExceptionFilter } from './filters/http-exception.filter';
 async function bootstrap() {
   const logger = new Logger('bootstrap');
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
+  const port = process.env.PORT;
   app.setGlobalPrefix('api');
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
-  await app.listen(3000);
-  logger.log(`Application listening on port ${await app.getUrl()}/api`);
+  app.enableCors();
+  await app.listen(port);
+  logger.log(`Application listening on port ${process.env.PORT}`);
 }
 bootstrap();
