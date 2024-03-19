@@ -4,6 +4,9 @@ import { UpdateServiceHistoryDto } from './dto/update-service-history.dto';
 import { ServiceHistoryEntity } from './service-history.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
+import { ServiceStateEntity } from '../service-state/service-state.entity';
+import { ServiceEntity } from '../service/service.entity';
+import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class ServiceHistoryService {
@@ -29,19 +32,6 @@ export class ServiceHistoryService {
       throw error;
     }
   }
-
-  // async findLastHistory(id: number): Promise<ServiceHistoryEntity> {
-  //   try {
-  //     return await this.serviceHistoryRepository
-  //       .createQueryBuilder('serviceHistory')
-  //       .orderBy('serviceHistory.id', 'DESC')
-  //       .where('serviceHistory.serviceId = :id', { id })
-  //       .limit(1)
-  //       .getOne();
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
 
   async findLastHistory(id: number): Promise<ServiceHistoryEntity> {
     try {
@@ -118,6 +108,24 @@ export class ServiceHistoryService {
         relations: ['service', 'user', 'stateCurrent', 'stateNext'],
       });
       return activities;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //!Testear
+  async createHistories(
+    body: {
+      dateEntry: Date;
+      stateCurrent: ServiceStateEntity;
+      stateNext: ServiceStateEntity;
+      remarks: string;
+      service: ServiceEntity;
+      user: UserEntity;
+    }[],
+  ): Promise<void> {
+    try {
+      await this.serviceHistoryRepository.save(body);
     } catch (error) {
       throw error;
     }

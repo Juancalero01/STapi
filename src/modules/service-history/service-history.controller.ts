@@ -15,6 +15,9 @@ import { ServiceHistoryEntity } from './service-history.entity';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
 import { RolesGuard } from '../role/common/role.guard';
 import { Roles } from '../role/common/role.decorator';
+import { ServiceStateEntity } from '../service-state/service-state.entity';
+import { ServiceEntity } from '../service/service.entity';
+import { UserEntity } from '../user/user.entity';
 
 @UseGuards(JwtGuard, RolesGuard)
 @Controller('service-history')
@@ -107,6 +110,27 @@ export class ServiceHistoryController {
   ): Promise<ServiceHistoryEntity> {
     try {
       return await this.serviceHistoryService.findLastDateEntry(id);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  //!Testear
+  @Post('/many')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async createServices(
+    @Body()
+    body: {
+      dateEntry: Date;
+      stateCurrent: ServiceStateEntity;
+      stateNext: ServiceStateEntity;
+      remarks: string;
+      service: ServiceEntity;
+      user: UserEntity;
+    }[],
+  ): Promise<void> {
+    try {
+      return await this.serviceHistoryService.createHistories(body);
     } catch (error) {
       throw error;
     }
