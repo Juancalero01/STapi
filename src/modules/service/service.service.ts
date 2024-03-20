@@ -409,12 +409,14 @@ export class ServiceService {
   private getnumberOfServices(services: ServiceEntity[]): ServiceEntity[] {
     return services;
   }
+
   private getReentryServices(services: ServiceEntity[]): ServiceEntity[] {
     return services.filter(
       (service, index, array) =>
         array.findIndex((s) => s.product.id === service.product.id) !== index,
     );
   }
+
   private getServicesRepair(services: ServiceEntity[]): ServiceEntity[] {
     return services.filter((service) =>
       service.serviceHistory.some(
@@ -641,6 +643,14 @@ export class ServiceService {
       warranty: boolean;
     }[],
   ): Promise<void> {
+    try {
+      await this.serviceRepository.save(body);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateServices(body: CreateServiceDto[]): Promise<void> {
     try {
       await this.serviceRepository.save(body);
     } catch (error) {

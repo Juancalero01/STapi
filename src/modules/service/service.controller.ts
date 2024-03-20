@@ -24,6 +24,19 @@ import { ProductEntity } from '../product/product.entity';
 export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
+  @Put('/umany')
+  @Roles('ADMINISTRADOR')
+  async updateServices(
+    @Body()
+    body: CreateServiceDto[],
+  ): Promise<void> {
+    try {
+      return await this.serviceService.updateServices(body);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   @Get('/r')
   @Roles('ADMINISTRADOR', 'TECNICO')
   async findLastReclaim(): Promise<string | null> {

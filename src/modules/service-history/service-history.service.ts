@@ -4,9 +4,6 @@ import { UpdateServiceHistoryDto } from './dto/update-service-history.dto';
 import { ServiceHistoryEntity } from './service-history.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
-import { ServiceStateEntity } from '../service-state/service-state.entity';
-import { ServiceEntity } from '../service/service.entity';
-import { UserEntity } from '../user/user.entity';
 
 @Injectable()
 export class ServiceHistoryService {
@@ -113,17 +110,7 @@ export class ServiceHistoryService {
     }
   }
 
-  //!Testear
-  async createHistories(
-    body: {
-      dateEntry: Date;
-      stateCurrent: ServiceStateEntity;
-      stateNext: ServiceStateEntity;
-      remarks: string;
-      service: ServiceEntity;
-      user: UserEntity;
-    }[],
-  ): Promise<void> {
+  async createHistories(body: ServiceHistoryEntity[]): Promise<void> {
     try {
       await this.serviceHistoryRepository.save(body);
     } catch (error) {
