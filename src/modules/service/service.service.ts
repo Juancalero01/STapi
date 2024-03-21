@@ -35,7 +35,12 @@ export class ServiceService {
     }
   }
 
-  async getServiceMain(): Promise<any> {
+  async getServiceMain(): Promise<{
+    services: number;
+    servicesActive: number;
+    servicesRepair: number;
+    servicesWithOutRepair: number;
+  }> {
     try {
       const currentYear = new Date().getFullYear();
 

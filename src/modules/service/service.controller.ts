@@ -115,7 +115,12 @@ export class ServiceController {
 
   @Get('/h')
   @Roles('ADMINISTRADOR', 'TECNICO')
-  async getServiceMain(): Promise<any> {
+  async getServiceMain(): Promise<{
+    services: number;
+    servicesActive: number;
+    servicesRepair: number;
+    servicesWithOutRepair: number;
+  }> {
     try {
       return await this.serviceService.getServiceMain();
     } catch (error) {
