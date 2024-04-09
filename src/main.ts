@@ -10,7 +10,15 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
+  app.enableCors({
+    origin: String(process.env.ORIGIN_CORS),
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization',
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 200,
+    maxAge: 3600,
+  });
   await app.listen(port);
   logger.log(`Application running`);
 }
