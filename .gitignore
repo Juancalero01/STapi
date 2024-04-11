@@ -36,3 +36,7 @@ vscode/*
 
 #Enviroments
 .env
+
+#Server
+web.config
+iisnode.yml
