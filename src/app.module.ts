@@ -16,6 +16,7 @@ import { RoleModule } from './modules/role/role.module';
 import { ServiceNoteModule } from './modules/service-note/service-note.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseConfig } from './config/database.config';
+import { ProductPieceModule } from './modules/product-piece/product-piece.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,6 +40,7 @@ import { DatabaseConfig } from './config/database.config';
     FailureTypeModule,
     UserModule,
     RoleModule,
+    ProductPieceModule,
   ],
   providers: [],
 })
