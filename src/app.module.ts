@@ -16,7 +16,8 @@ import { RoleModule } from './modules/role/role.module';
 import { ServiceNoteModule } from './modules/service-note/service-note.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseConfig } from './config/database.config';
-import { ProductPieceModule } from './modules/product-piece/product-piece.module';
+import { ProductPartModule } from './modules/product-part/product-part.module';
+import { ProductPartTypeModule } from './modules/product-part-type/product-part-type.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,7 +41,8 @@ import { ProductPieceModule } from './modules/product-piece/product-piece.module
     FailureTypeModule,
     UserModule,
     RoleModule,
-    ProductPieceModule,
+    ProductPartModule,
+    ProductPartTypeModule,
   ],
   providers: [],
 })
