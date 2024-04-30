@@ -3,7 +3,7 @@ import { ProductTypeEntity } from 'src/modules/product-type/product-type.entity'
 import { ServiceEntity } from 'src/modules/service/service.entity';
 import { BaseEntity } from 'src/shared/entities/base.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { ProductPieceEntity } from '../product-piece/product-piece.entity';
+import { ProductPartEntity } from '../product-part/product-part.entity';
 
 @Entity('products')
 export class ProductEntity extends BaseEntity {
@@ -33,6 +33,6 @@ export class ProductEntity extends BaseEntity {
   @OneToMany(() => ServiceEntity, (service) => service.product)
   service: ServiceEntity[];
 
-  @OneToMany(() => ProductPieceEntity, (productPiece) => productPiece.product)
-  productPieces: ProductPieceEntity[];
+  @OneToMany(() => ProductPartEntity, (productPart) => productPart.product)
+  productPart: ProductPartEntity[];
 }
