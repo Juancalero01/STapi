@@ -33,6 +33,8 @@ export class ProductEntity extends BaseEntity {
   @OneToMany(() => ServiceEntity, (service) => service.product)
   service: ServiceEntity[];
 
-  @OneToMany(() => ProductPartEntity, (productPart) => productPart.product)
+  @OneToMany(() => ProductPartEntity, (productPart) => productPart.product, {
+    eager: true,
+  })
   productPart: ProductPartEntity[];
 }

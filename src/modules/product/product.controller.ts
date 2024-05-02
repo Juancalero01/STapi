@@ -53,7 +53,7 @@ export class ProductController {
 
   @Post('/')
   @Roles('ADMINISTRADOR')
-  async create(@Body() body: CreateProductDto): Promise<void> {
+  async create(@Body() body: CreateProductDto): Promise<ProductEntity> {
     try {
       return await this.productService.create(body);
     } catch (error) {

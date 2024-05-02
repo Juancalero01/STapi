@@ -14,6 +14,7 @@ import { CreateProductPartDto } from './dto/create-product-part.dto';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
 import { RolesGuard } from '../role/common/role.guard';
 import { Roles } from '../role/common/role.decorator';
+import { ProductPartEntity } from './product-part.entity';
 
 @UseGuards(JwtGuard, RolesGuard)
 @Controller('product-part')
@@ -30,6 +31,18 @@ export class ProductPartController {
   @Roles('ADMINISTRADOR', 'TECNICO')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productPartService.findOne(id);
+  }
+
+  @Get('s/:serial')
+  @Roles('ADMINISTRADOR', 'TECNICO')
+  async findOneSerial(
+    @Param('serial') serial: string,
+  ): Promise<ProductPartEntity> {
+    try {
+      return await this.productPartService.findOneSerial(serial);
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Post('/')

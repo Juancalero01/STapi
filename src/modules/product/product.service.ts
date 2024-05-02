@@ -15,6 +15,7 @@ export class ProductService {
   async findAll(): Promise<ProductEntity[]> {
     try {
       return await this.productRepository.find({
+        relations: ['productPart'],
         order: {
           productType: {
             id: 'ASC',
@@ -42,14 +43,14 @@ export class ProductService {
     }
   }
 
-  async create(body: CreateProductDto): Promise<void> {
+  async create(body: CreateProductDto): Promise<ProductEntity> {
     try {
       if (await this.findOneSerial(body.serial))
         throw new HttpException(
           `Product with serial ${body.serial} already exists`,
           409,
         );
-      await this.productRepository.save(body);
+      return await this.productRepository.save(body);
     } catch (error) {
       throw error;
     }

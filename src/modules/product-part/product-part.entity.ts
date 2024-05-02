@@ -14,6 +14,9 @@ export class ProductPartEntity extends BaseEntity {
   @ManyToOne(
     () => ProductPartTypeEntity,
     (productPartType) => productPartType.productPart,
+    {
+      eager: true,
+    },
   )
   productPartType: ProductPartTypeEntity;
 }

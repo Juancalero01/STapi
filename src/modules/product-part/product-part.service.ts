@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductPartDto } from './dto/create-product-part.dto';
-import { UpdateProductPartDto } from './dto/update-product-part.dto';
+// import { UpdateProductPartDto } from './dto/update-product-part.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductPartEntity } from './product-part.entity';
 import { Repository } from 'typeorm';
@@ -27,6 +27,14 @@ export class ProductPartService {
           id,
         },
       });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findOneSerial(serial: string): Promise<ProductPartEntity> {
+    try {
+      return await this.productPartRepository.findOne({ where: { serial } });
     } catch (error) {
       throw error;
     }
