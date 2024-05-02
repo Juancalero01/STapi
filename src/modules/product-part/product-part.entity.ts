@@ -8,7 +8,9 @@ export class ProductPartEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 15, unique: true, nullable: false })
   serial: string;
 
-  @ManyToOne(() => ProductEntity, (product) => product.productPart)
+  @ManyToOne(() => ProductEntity, (product) => product.productPart, {
+    cascade: true,
+  })
   product: ProductEntity;
 
   @ManyToOne(
@@ -16,6 +18,7 @@ export class ProductPartEntity extends BaseEntity {
     (productPartType) => productPartType.productPart,
     {
       eager: true,
+      cascade: true,
     },
   )
   productPartType: ProductPartTypeEntity;
