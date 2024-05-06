@@ -18,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseConfig } from './config/database.config';
 import { ProductPartModule } from './modules/product-part/product-part.module';
 import { ProductPartTypeModule } from './modules/product-part-type/product-part-type.module';
+import { ProductPartHistoryModule } from './modules/product-part-history/product-part-history.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -43,6 +44,7 @@ import { ProductPartTypeModule } from './modules/product-part-type/product-part-
     RoleModule,
     ProductPartModule,
     ProductPartTypeModule,
+    ProductPartHistoryModule,
   ],
   providers: [],
 })
