@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { ProductPartService } from './product-part.service';
 import { CreateProductPartDto } from './dto/create-product-part.dto';
-// import { UpdateProductPartDto } from './dto/update-product-part.dto';
+import { UpdateProductPartDto } from './dto/update-product-part.dto';
 import { JwtGuard } from '../auth/jwt/jwt.guard';
 import { RolesGuard } from '../role/common/role.guard';
 import { Roles } from '../role/common/role.decorator';
@@ -47,15 +47,23 @@ export class ProductPartController {
 
   @Post('/')
   @Roles('ADMINISTRADOR')
-  create(@Body() body: CreateProductPartDto[]) {
-    return this.productPartService.create(body);
+  async create(@Body() body: CreateProductPartDto[]): Promise<void> {
+    try {
+      return this.productPartService.create(body);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // @Put(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateProductPartDto: UpdateProductPartDto,
-  // ) {
-  //   return this.productPartService.update(+id, updateProductPartDto);
-  // }
+  @Put('/:id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() body: UpdateProductPartDto,
+  ): Promise<void> {
+    try {
+      return await this.productPartService.update(id, body);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateProductPartDto } from './dto/create-product-part.dto';
-// import { UpdateProductPartDto } from './dto/update-product-part.dto';
+import { UpdateProductPartDto } from './dto/update-product-part.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductPartEntity } from './product-part.entity';
 import { Repository } from 'typeorm';
@@ -40,16 +40,19 @@ export class ProductPartService {
     }
   }
 
-  async create(body: CreateProductPartDto[]) {
+  async create(body: CreateProductPartDto[]): Promise<void> {
     try {
-      return await this.productPartRepository.save(body);
+      await this.productPartRepository.save(body);
     } catch (error) {
       throw error;
     }
   }
 
-  //TODO: No se realiza el update porque hay que definir como va a estar compuesto el historial de cambios de partes.
-  // update(id: number, updateProductPartDto: UpdateProductPartDto) {
-  //   return `This action updates a #${id} productPart`;
-  // }
+  async update(id: number, body: UpdateProductPartDto): Promise<void> {
+    try {
+      await this.productPartRepository.update(id, body);
+    } catch (error) {
+      throw error;
+    }
+  }
 }
