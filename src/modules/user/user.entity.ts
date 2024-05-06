@@ -3,16 +3,17 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { ServiceHistoryEntity } from '../service-history/service-history.entity';
 import { RoleEntity } from '../role/role.entity';
 import { ServiceNoteEntity } from '../service-note/service-note.entity';
+import { ProductPartHistoryEntity } from '../product-part-history/product-part-history.entity';
 
 @Entity('users')
 export class UserEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 255, nullable: false })
   fullname: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255, nullable: false, select: false })
   username: string;
 
-  @Column({ type: 'varchar', length: 255, nullable: false })
+  @Column({ type: 'varchar', length: 255, nullable: false, select: false })
   email: string;
 
   @Column({ type: 'varchar', length: 255, nullable: false, select: false })
@@ -21,7 +22,6 @@ export class UserEntity extends BaseEntity {
   @ManyToOne(() => RoleEntity, (role) => role.user, {
     nullable: false,
     cascade: true,
-    eager: true,
   })
   role: RoleEntity;
 
@@ -33,4 +33,10 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => ServiceNoteEntity, (note) => note.user)
   serviceNote: ServiceNoteEntity[];
+
+  @OneToMany(
+    () => ProductPartHistoryEntity,
+    (productPartHistory) => productPartHistory.user,
+  )
+  productPartHistory: ProductPartHistoryEntity[];
 }

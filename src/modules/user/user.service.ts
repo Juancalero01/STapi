@@ -17,6 +17,7 @@ export class UserService {
     try {
       return await this.userRepository.find({
         select: ['id', 'username', 'fullname', 'email', 'role', 'isActive'],
+        relations: ['role'],
         order: { role: { id: 'ASC' }, isActive: 'DESC' },
       });
     } catch (error) {
@@ -28,6 +29,7 @@ export class UserService {
     try {
       return await this.userRepository.find({
         select: ['id', 'username', 'fullname', 'email', 'role', 'isActive'],
+        relations: ['role'],
         where: { isActive: true },
       });
     } catch (error) {
@@ -40,6 +42,7 @@ export class UserService {
       return await this.userRepository.findOne({
         where: { id },
         select: ['id', 'username', 'fullname', 'email', 'role', 'isActive'],
+        relations: ['role'],
       });
     } catch (error) {
       throw error;
@@ -67,6 +70,7 @@ export class UserService {
           'password',
           'isActive',
         ],
+        relations: ['role'],
       });
     } catch (error) {
       throw error;
@@ -149,6 +153,7 @@ export class UserService {
           'password',
           'isActive',
         ],
+        relations: ['role'],
       });
       if (!user) throw new HttpException('User not found', 404);
       const isMatch = await compare(body.password, user.password);
